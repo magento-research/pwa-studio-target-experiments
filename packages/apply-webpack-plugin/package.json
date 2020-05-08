@@ -1,0 +1,25 @@
+{
+  "name": "@magento-research/pwa-experiment-apply-webpack-plugin",
+  "version": "0.0.1",
+  "description": "Apply a Webpack plugin via a PWA Studio Target",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "github:magento-research/pwa-studio-target-experiments",
+  "dependencies": {
+    "figlet": "^1.4.0"
+  },
+  "devDependencies": {
+    "@magento/pwa-buildpack": "^5.1.1",
+    "webpack": "~4.38.0"
+  },
+  "peerDependencies": {
+    "@magento/pwa-buildpack": "^5.1.1",
+    "webpack": "~4.38.0"
+  },
+  "pwa-studio": {
+    "targets": {
+      "intercept": "./apply-plugin"
+    }
+  }
+}

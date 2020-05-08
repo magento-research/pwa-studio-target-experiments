@@ -1,0 +1,28 @@
+{
+  "name": "@magento-research/pwa-studio-target-experiments",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Example extensions for PWA Studio",
+  "workspaces": [
+    "packages/*"
+  ],
+  "author": "Magento Commerce",
+  "scripts": {
+    "lint": "eslint --ext .js --ext .json .",
+    "prettier": "prettier --write '*.js'",
+    "prettier:check": "prettier-check '*.js'",
+    "test": "npm run -s prettier:check && npm run -d lint"
+  },
+  "license": "(OSL-3.0 OR AFL-3.0)",
+  "repository": "github:magento-research/pwa-studio-target-experiments",
+  "devDependencies": {
+    "@magento/eslint-config": "^1.5.2",
+    "eslint": "~5.14.1",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-package-json": "^0.1.1",
+    "eslint-plugin-react": "^7.5.1",
+    "eslint-plugin-react-hooks": "^1.6.0",
+    "prettier": "~1.16.4"
+  }
+}
