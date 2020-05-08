@@ -1,6 +1,6 @@
 Example NPM modules that integrate with PWA Studio projects and enhance them.
 
-To try one in your project...
+## Installation
 
 1. Clone this repository
 
@@ -23,3 +23,12 @@ To try one in your project...
    ```
 
 6. Run `yarn run build` in your PWA directory. The extension will take effect!
+
+## Roadmap
+
+I wanna add:
+- Inject CSP into UPWARD file
+- New color scheme
+- Modify HtmlWebpackPlugin output
+- Add TypeScript loading / parsing
+- Apollo Client config extension
