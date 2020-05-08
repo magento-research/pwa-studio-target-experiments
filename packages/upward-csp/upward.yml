@@ -1,0 +1,15 @@
+pwaExperimentContentSecurityPolicy:
+  resolver: template
+  engine: mustache
+  provide:
+    backend: env.MAGENTO_BACKEND_URL
+  template:
+    resolver: conditional
+    when:
+      - matches: env.NODE_ENV
+        pattern: development
+        use:
+          inline: ""
+    default:
+      inline: "default-src 'self' https: {{ backend }}; img-src 'self' https: data: mediastream: {{ backend }}; style-src 'self' https: 'unsafe-inline' {{ backend }}"
+
