@@ -1,25 +1,15 @@
+const path = require('path');
+const fs = require('fs');
 const jsYaml = require('js-yaml');
 
 const UPWARD_FILENAME = 'upward.yml';
 
 const DEF_NAME = 'pwaExperimentContentSecurityPolicy';
 
-const setVeniaCsp = definitions => {
-    definitions.veniaAppShell.inline.headers.inline[
-        'Content-Security-Policy'
-    ] = DEF_NAME;
-};
-
 module.exports = targets => {
-    const { webpackCompiler, specialFeatures } = targets.of(
-        '@magento/pwa-buildpack'
-    );
+    const builtins = targets.of('@magento/pwa-buildpack');
 
-    specialFeatures.tap(features => {
-        features[targets.name] = { upward: true };
-    });
-
-    webpackCompiler.tap(compiler => {
+    builtins.webpackCompiler.tap(compiler => {
         compiler.hooks.emit.tapPromise({
             name: targets.name,
             stage: 2,
@@ -27,15 +17,19 @@ module.exports = targets => {
                 const upwardAsset = compilation.assets[UPWARD_FILENAME];
                 if (upwardAsset) {
                     const definitions = jsYaml.safeLoad(upwardAsset.source());
-                    if (!definitions[DEF_NAME]) {
-                        throw new Error(
-                            `${
-                                targets.name
-                            } could not find its own definition in the emitted upward.yml`
-                        );
-                    }
 
-                    setVeniaCsp(definitions);
+                    const cspDefinitions = jsYaml.safeLoad(
+                        await fs.promises.readFile(
+                            path.resolve(__dirname, 'upward.yml'),
+                            'utf8'
+                        )
+                    );
+
+                    Object.assign(definitions, cspDefinitions);
+
+                    definitions.veniaAppShell.inline.headers.inline[
+                        'Content-Security-Policy'
+                    ] = DEF_NAME;
 
                     const newSource = jsYaml.safeDump(definitions);
                     const newSourceSize = Buffer.from(newSource).byteLength;
