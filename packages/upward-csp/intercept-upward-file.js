@@ -1,25 +1,14 @@
+const path = require('path');
 const jsYaml = require('js-yaml');
 
 const UPWARD_FILENAME = 'upward.yml';
 
 const DEF_NAME = 'pwaExperimentContentSecurityPolicy';
 
-const setVeniaCsp = definitions => {
-    definitions.veniaAppShell.inline.headers.inline[
-        'Content-Security-Policy'
-    ] = DEF_NAME;
-};
-
 module.exports = targets => {
-    const { webpackCompiler, specialFeatures } = targets.of(
-        '@magento/pwa-buildpack'
-    );
+    const builtins = targets.of('@magento/pwa-buildpack');
 
-    specialFeatures.tap(features => {
-        features[targets.name] = { upward: true };
-    });
-
-    webpackCompiler.tap(compiler => {
+    builtins.webpackCompiler.tap(compiler => {
         compiler.hooks.emit.tapPromise({
             name: targets.name,
             stage: 2,
@@ -35,7 +24,12 @@ module.exports = targets => {
                         );
                     }
 
-                    setVeniaCsp(definitions);
+                    definitions[DEF_NAME] = jsYaml.safeLoad(
+                        path.resolve(__dirname, 'upward.yml')
+                    );
+                    definitions.veniaAppShell.inline.headers.inline[
+                        'Content-Security-Policy'
+                    ] = DEF_NAME;
 
                     const newSource = jsYaml.safeDump(definitions);
                     const newSourceSize = Buffer.from(newSource).byteLength;
