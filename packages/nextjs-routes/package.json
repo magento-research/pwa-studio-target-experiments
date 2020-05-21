@@ -1,25 +1,31 @@
 {
-  "name": "@magento-research/pwa-experiment-apply-webpack-plugin",
+  "name": "@magento-research/pwa-nextjs-routes",
   "version": "0.0.1",
-  "description": "Apply a Webpack plugin via a PWA Studio Target",
+  "description": "Use filesystem-based NextJS-like routes for Venia",
   "publishConfig": {
     "access": "public"
   },
+  "license": "(OSL-3.0 OR AFL-3.0)",
+  "scripts": {
+    "linkme": "yarn link"
+  },
+  "main": "./detect-routes.js",
   "repository": "github:magento-research/pwa-studio-target-experiments",
   "dependencies": {
-    "figlet": "^1.4.0"
+    "glob": "^7.1.6"
   },
   "devDependencies": {
     "@magento/pwa-buildpack": "^5.1.1",
+    "@magento/venia-ui": "^3.0.0",
     "webpack": "~4.38.0"
   },
   "peerDependencies": {
     "@magento/pwa-buildpack": "^5.1.1",
-    "webpack": "~4.38.0"
+    "@magento/venia-ui": "^3.0.0"
   },
   "pwa-studio": {
     "targets": {
-      "intercept": "./apply-plugin"
+      "intercept": "./detect-routes"
     }
   }
 }

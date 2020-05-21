@@ -8,6 +8,7 @@
   ],
   "author": "Magento Commerce",
   "scripts": {
+    "link:all": "yarn workspaces run linkme",
     "lint": "eslint --ext .js --ext .json .",
     "prettier": "prettier --write '*.js'",
     "prettier:check": "prettier-check '*.js'",
