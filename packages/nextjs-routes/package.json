@@ -21,11 +21,12 @@
   },
   "peerDependencies": {
     "@magento/pwa-buildpack": "^5.1.1",
-    "@magento/venia-ui": "^3.0.0"
+    "@magento/venia-ui": "^3.0.0",
+    "react-markdown": "^4.3.1"
   },
   "pwa-studio": {
     "targets": {
-      "intercept": "./detect-routes"
+      "intercept": "./next-intercept"
     }
   }
 }
