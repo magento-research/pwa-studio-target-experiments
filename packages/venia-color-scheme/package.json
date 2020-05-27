@@ -1,0 +1,38 @@
+{
+  "name": "@magento-research/pwa-venia-color-scheme",
+  "version": "0.0.1",
+  "description": "Tweak global colors in Venia-UI",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "(OSL-3.0 OR AFL-3.0)",
+  "scripts": {
+    "linkme": "yarn link"
+  },
+  "main": "./inject-tinker-loader.js",
+  "repository": "github:magento-research/pwa-studio-target-experiments",
+  "dependencies": {
+    "color": "^3.1.2"
+  },
+  "devDependencies": {
+    "@magento/pwa-buildpack": "^5.1.1",
+    "@magento/venia-ui": "^3.0.0",
+    "webpack": "~4.38.0"
+  },
+  "peerDependencies": {
+    "@magento/pwa-buildpack": "^5.1.1",
+    "@magento/venia-ui": "^3.0.0",
+    "postcss": "^7.0.26",
+    "postcss-loader": "^3.0.0",
+    "webpack": "~4.38.0"
+  },
+  "pwa-studio": {
+    "targets": {
+      "declare": "./declare-colors",
+      "intercept": "./intercept-colors"
+    }
+  },
+  "resolutions": {
+    "postcss": "7.0.26"
+  }
+}
