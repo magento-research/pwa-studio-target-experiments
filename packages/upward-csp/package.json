@@ -6,9 +6,6 @@
     "access": "public"
   },
   "license": "(OSL-3.0 OR AFL-3.0)",
-  "scripts": {
-    "linkme": "yarn link"
-  },
   "main": "./intercept-upward-file.js",
   "repository": "github:magento-research/pwa-studio-target-experiments",
   "dependencies": {

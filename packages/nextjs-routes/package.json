@@ -6,9 +6,6 @@
     "access": "public"
   },
   "license": "(OSL-3.0 OR AFL-3.0)",
-  "scripts": {
-    "linkme": "yarn link"
-  },
   "main": "./detect-routes.js",
   "repository": "github:magento-research/pwa-studio-target-experiments",
   "dependencies": {
