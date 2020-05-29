@@ -1,10 +1,7 @@
 module.exports = targets => {
-    const { envVarDefinitions, specialFeatures, webpackCompiler } = targets.of(
-        '@magento/pwa-buildpack'
-    );
-    const { navItems, routes, apolloLinks } = targets.of('@magento/venia-ui');
+    const builtins = targets.of('@magento/pwa-buildpack');
 
-    envVarDefinitions.tap(defs => {
+    builtins.envVarDefinitions.tap(defs => {
         defs.sections.push({
             name: 'Contentful',
             variables: [
@@ -17,14 +14,17 @@ module.exports = targets => {
             ]
         });
     });
-    specialFeatures.tap(features => {
+
+    builtins.specialFeatures.tap(features => {
         features[targets.name] = {
             esModules: true,
             cssModules: true
         };
     });
 
-    navItems.tap(navItems => [
+    const venia = targets.of('@magento/venia-ui');
+
+    venia.navItems.tap(navItems => [
         ...navItems,
         {
             name: 'Blog',
@@ -32,7 +32,7 @@ module.exports = targets => {
         }
     ]);
 
-    routes.tap(routes => [
+    venia.routes.tap(routes => [
         ...routes,
         {
             name: 'Blog',
