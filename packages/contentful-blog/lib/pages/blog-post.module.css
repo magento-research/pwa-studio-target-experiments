@@ -1,0 +1,81 @@
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 12.5em;
+    background: #e1e1e1;
+    margin: -1em -2.5em 1em;
+    font-size: 2em;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.heroImage {
+    /*
+    Ensure golden ratio for the hero size while limiting it to some extend to
+    the viewport width
+  */
+    max-height: 400px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    opacity: 1;
+    transition: opacity 500ms ease 0s;
+}
+
+.heroDetails {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 0);
+    font-size: 14px;
+    padding: 0 0.5em;
+}
+
+@media (min-width: 600px) {
+    .heroDetails {
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 1000px) {
+    .heroDetails {
+        font-size: 20px;
+    }
+}
+
+.heroHeadline {
+    margin: 0;
+}
+
+.heroTitle {
+    margin: 0;
+    font-size: 1.125em;
+    font-weight: bold;
+}
+
+.section_headline {
+    padding: 0 0 0.4em 0;
+    margin: 0 0 5vmin 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 2.3rem;
+}
+
+.post {
+    composes: wrapper from '~@magento-research/pwa-contentful-blog/lib/pages/blog.module.css';
+}
+
+.post h2 {
+    font-size: 2rem;
+    margin: 2rem 0;
+}
+
+.post p {
+    margin: 1rem 0;
+}

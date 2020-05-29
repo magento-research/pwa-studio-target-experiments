@@ -1,0 +1,28 @@
+{
+  "name": "@magento-research/pwa-contentful-blog",
+  "version": "0.0.1",
+  "description": "Contentful Blog extension for PWA Studio",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./add-contentful-blog.js",
+  "license": "(OSL-3.0 OR AFL-3.0)",
+  "scripts": {
+    "linkme": "yarn link"
+  },
+  "repository": "github:magento-research/pwa-studio-target-experiments",
+  "peerDependencies": {
+    "@apollo/react-hooks": "~3.1.2",
+    "@magento/pwa-buildpack": "^5.1.1",
+    "@magento/venia-ui": "^3.0.0",
+    "apollo-link-http": "^1.5.11",
+    "react": "~16.9.0",
+    "react-router-dom": "~5.1.0",
+    "webpack": "~4.38.0"
+  },
+  "pwa-studio": {
+    "targets": {
+      "intercept": "./add-contentful-blog"
+    }
+  }
+}
