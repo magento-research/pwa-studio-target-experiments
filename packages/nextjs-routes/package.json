@@ -14,11 +14,6 @@
   "dependencies": {
     "glob": "^7.1.6"
   },
-  "devDependencies": {
-    "@magento/pwa-buildpack": "^5.1.1",
-    "@magento/venia-ui": "^3.0.0",
-    "webpack": "~4.38.0"
-  },
   "peerDependencies": {
     "@magento/pwa-buildpack": "^5.1.1",
     "@magento/venia-ui": "^3.0.0",
