@@ -1,12 +1,17 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import styles from './blog.module.css';
+import classes from './blog.module.css';
+import styles from '../common.module.css';
 import ArticlePreview from '../components/article-preview';
 import { useQuery } from '@apollo/react-hooks';
 import { fullPageLoadingIndicator } from '@magento/venia-ui/lib/components/LoadingIndicator';
 
 export const pageQuery = gql`
-    query ContentfulIndexQuery {
+    query ContentfulIndexQuery(
+        $maxWidth: Int!
+        $maxHeight: Int!
+        $previewSizes: String!
+    ) {
         allContentfulBlogPost(sort: { fields: [publishDate], order: DESC }) {
             edges {
                 node {
@@ -16,9 +21,10 @@ export const pageQuery = gql`
                     tags
                     heroImage {
                         fluid(
-                            maxWidth: 400
-                            maxHeight: 196
+                            maxWidth: $maxWidth
+                            maxHeight: $maxHeight
                             resizingBehavior: FILL
+                            sizes: $previewSizes
                         ) {
                             srcSet
                             src
@@ -37,7 +43,15 @@ export const pageQuery = gql`
 `;
 
 function BlogIndex() {
-    const { loading, error, data } = useQuery(pageQuery, {});
+    const maxWidth = Number(styles.listBreakpoint.replace(/[^\d\.]/g, ''));
+    const variables = {
+        maxWidth,
+        maxHeight: ~~(maxWidth / 2.6),
+        previewSizes: styles.previewSizes
+    };
+    const { loading, error, data } = useQuery(pageQuery, {
+        variables
+    });
 
     if (loading) {
         return fullPageLoadingIndicator;
@@ -57,20 +71,18 @@ function BlogIndex() {
     const posts = data.allContentfulBlogPost.edges;
 
     return (
-        <div className={styles.root}>
-            <h2 className={styles.hero}>Blog</h2>
-            <h2 className={styles.section_headline}>Recent articles</h2>
-            <div className={styles.wrapper}>
-                <ul className={styles.article_list}>
-                    {posts.map(({ node }) => {
-                        return (
-                            <li key={node.slug}>
-                                <ArticlePreview article={node} />
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>
+        <div className={classes.root}>
+            <h2 className={classes.hero}>Blog</h2>
+            <h2 className={classes.section_headline}>Recent articles</h2>
+            <ul className={classes.article_list}>
+                {posts.map(({ node }) => {
+                    return (
+                        <li className={classes.article_item} key={node.slug}>
+                            <ArticlePreview article={node} />
+                        </li>
+                    );
+                })}
+            </ul>
         </div>
     );
 }

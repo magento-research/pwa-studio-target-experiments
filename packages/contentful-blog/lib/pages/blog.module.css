@@ -1,3 +1,9 @@
+:import('../common.module.css') {
+    __breakpoint: listBreakpoint;
+    __portraitMQ: portraitMQ;
+    __landscapeMQ: landscapeMQ;
+}
+
 .root {
     padding: 1rem;
 }
@@ -9,6 +15,7 @@
 }
 
 .article_list {
+    line-height: 1.5rem;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -17,24 +24,22 @@
     grid-gap: 5vmin;
 }
 
-@media (max-width: 640px) {
-    .article_list {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        display: block;
-    }
-}
-
 .section_headline {
     padding: 0 0 0.4em 0;
     margin: 0 0 5vmin 0;
     border-bottom: 1px solid #ddd;
 }
 
-.wrapper {
-    width: calc(100% - 10vmin);
-    margin: 0 auto;
-    padding: 5vmin 0;
-    line-height: 1.5rem;
+@media __portraitMQ {
+    .article_list {
+        grid-template-columns: 1fr;
+        grid-gap: 10vh;
+    }
+}
+
+@media __landscapeMQ {
+    .article_list {
+        grid-template-columns: 1fr;
+        grid-gap: 7vw;
+    }
 }

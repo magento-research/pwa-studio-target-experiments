@@ -1,0 +1,11 @@
+@value listBreakpoint: 800px;
+@value portraitMQ: (max-width: listBreakpoint) and (orientation: portrait);
+@value landscapeMQ: (max-width: listBreakpoint) and (orientation: landscape);
+@value previewSizes: portraitMQ 80vw, landscapeMQ 90vw, listBreakpoint;
+
+:export {
+    listBreakpoint: listBreakpoint;
+    portraitMQ: portraitMQ;
+    landscapeMQ: landscapeMQ;
+    previewSizes: previewSizes;
+}

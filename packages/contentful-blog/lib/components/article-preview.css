@@ -1,28 +1,28 @@
+:import('../common.module.css') {
+    __breakpoint: listBreakpoint;
+    __landscapeMQ: landscapeMQ;
+}
+
+.image {
+    width: 100%;
+}
+
 .preview {
-    max-width: 400px;
+    max-width: __breakpoint;
+    width: 100%;
 }
 
 .previewTitle {
     font-size: 1.5em;
+    padding: 0 0 0.4em 0;
+    margin: 0 0 0.2em 0;
+    border-bottom: 1px solid #ddd;
 }
 
-.tag {
-    color: #a0a0a0;
-    text-decoration: none;
-    display: inline-block;
-    padding: 0.33333rem 0.5rem;
-    line-height: 1;
-    border-radius: 2px;
-    border: 1px solid #a0a0a0;
-    margin-right: 0.5em;
-}
-
-@media (max-width: 640px) {
-    .preview {
-        max-width: calc(100% - 2rem);
-        margin: 1rem 0;
-    }
-    .preview picture {
-        max-width: calc(100% - 2rem);
+@media __landscapeMQ {
+    .image {
+        max-height: 30vh;
+        object-fit: cover;
+        object-position: center center;
     }
 }
