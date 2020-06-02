@@ -1,5 +1,3 @@
-Example NPM modules that integrate with PWA Studio projects and enhance them.
-
 # PWA Studio Target Experiments
 
 This repository is a collection of experimental PWA Studio extensions. Use it to learn about how such extensions are built and used.
@@ -10,48 +8,81 @@ This repository is a collection of experimental PWA Studio extensions. Use it to
 -   If you have general questions or comments about Magento PWAs, visit us at the [community Slack channel](slack.pwastudio.io) or go to the [Developer Documentation site](pwastudio.io).
 -   If you want to do something else, then I don't know why you're here, but you could go look at [people dancing to Steely Dan](https://twitter.com/steelydance), or go play the legendary 1993 video game [Star Control 2](http://sc2.sourceforge.net/). _Vaya con dios._
 
-## Extensions
+## Setup
+
+This repo should live in a sibling directory to your working copy of PWA Studio.
+It has scripts which connect the PWA project with the extension code in these packages, much like a filesystem dependency in Composer or a linked package in NPM.
+
+1. Clone this repository.
+
+2. Run `yarn install` in the repository root. This repo uses [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces), like PWA Studio does, so this command will also install all the dependencies in `packages/`.
+
+3. Here comes the magic! In the repository root, run `yarn studiolink </path/to/your/pwa_studio_repo>`.
+   Use the _absolute path_ to your PWA Studio repo.
+
+    ```sh
+    yarn studiolink /Users/jzetlen/Projects/pwa-studio/packages/venia-concept
+    ```
+
+    All the packages in `packages` are now available to `require()` and `import` in your PWA project.
+    _(From now on, if you run `yarn install` in your PWA project, you may have to re-run this command)._
+
+4) Your PWA normally only runs targets from its explicitly declared dependencies.
+   However, these modules aren't published to NPM, so if you explicitly declared one in `package.json` it would cause problems on install.
+   To help with development, PWA Buildpack has a `BUILDBUS_DEPS_ADDITIONAL` environment variable.
+   Specify it at the command line, or put it in your `.env` file:
+
+    ```sh
+    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-upward-csp,@magento-research/pwa-venia-color-scheme
+    ```
+
+    If these packages are resolvable (installed) in your project, then Buildpack will run their interceptors as if they are declare dependencies.
+    In step 3, you linked all of these experiments to your PWA project, so this should work!
+
+5) Run `yarn run watch:venia` in your PWA directory. The extensions will take effect!
+
+6) Test your extensions: switch your computer's display settings to dark mode, for instance.
+
+Now that this repository's code is running in your PWA, it's time to review the concepts of PWA Studio Targets, and then explore the example modules and what features they demonstrate.
+
+## Concepts
+
+### Extensions
 
 PWA Studio extensions are very similar to [Webpack plugins](https://v4.webpack.js.org/api/plugins/), in that they use [Tapables](https://github.com/webpack/tapable) as individual extension points, to "hook in" to other parts of the framework.
 
 The big difference between the PWA Studio extension system and Webpack plugins is in how a project uses them. Webpack is designed for developers, so the way to add Webpack plugins is to manually install them with NPM, and then manually edit Webpack's JavaScript configuration file to add them.
 
-PWA Studio is designed for developers, sysadmins, and business users to customize, so it works a little bit more automatically. Instead of editing code, you can add and activate a PWA Studio extension in one step: by installing it with your package manager (NPM or Yarn). Buildpack, the PWA Studio toolkit, detects which installed packages are PWA Studio extensions, then automatically runs their code. After installing an extension with one command, e.g. `npm install @magento/pagebuilder`, a PWA project will integrate the new feature into the storefront with no additional work required.
+PWA Studio is designed for developers, sysadmins, and business users to customize, so it works a little bit more automatically. Instead of editing code, you can add and activate a PWA Studio extension in one step: by installing it with your package manager (NPM or Yarn). Buildpack, the PWA Studio toolkit, detects which installed packages are PWA Studio extensions, then automatically runs their code. After installing an extension with one command, e.g. `npm install @magento/pagebuilder`, a PWA project will integrate the new feature into the storefront with no additional work required .
 
 This works a lot like [Magento Commerce](https://magento.com/), the backend server for PWA Studio apps. If you make an extension for Magento which enhances its backend API and requires frontend changes as well, you can make a Composer package for the former and an NPM package for the latter; each will install and activate in one step.
 
 But when PWA Studio detects and runs extension code, what does that code do? It connects to the rest of your project using Targets.
 
-## Targets
+### Targets
 
 The Target is a low-level extensibility "primitive". It's a building block for extension functionality
 
-# Setup
+## Walkthrough
 
-## You're a core contributor. Have a copy of PWA Studio in a sibling directory
+### Each package demos a concept and a possibility. Walk through them in order
 
-## Link em all and have two terminals going
+#### upward-csp
 
-# Walkthrough
-
-## Each package demos a concept and a possibility. Walk through them in order
-
-### upward-csp
-
-#### It demos:
+##### It demos:
 
 -   access to webpack internals
 -   upward extensibility
 -   what you get from adding new targets
 
-#### Demo it
+##### Demo it
 
 1. Look at the files (not intercept-upward-target.js yet)
 2. In your Studio dir, add BUILDPACK_DEPS_ADDITIONAL=etc
 3. Full build and stage
 4. Whee!
 
-#### Pairing with core contribution
+##### Pairing with core contribution
 
 1. Lotsa boilerplate right now
 2. UPWARD mods are common, it should be a higher-level target
@@ -59,15 +90,15 @@ The Target is a low-level extensibility "primitive". It's a building block for e
 4. In your Studio dir, check out draft PR branch
 5. Change your package.json intercept to use intercept-upward-target.js instead
 
-### venia-color-scheme
+#### venia-color-scheme
 
-#### It demos:
+##### It demos:
 
 -   Adding another transform type
 -   Using color math and CSS vars
 -   Declaring your OWN targets!
 
-#### Demo it
+##### Demo it
 
 1. Look files
 2. Check out PWA Studio branch with style changes
@@ -77,20 +108,20 @@ The Target is a low-level extensibility "primitive". It's a building block for e
 6. omg
 7. Use color overrides target
 
-#### Pairing with core contribution
+##### Pairing with core contribution
 
 1. Gotta fix that CSS, stay tuned, styleguide
 
-### nextjs-routes
+#### nextjs-routes
 
-#### It demos:
+##### It demos:
 
 -   Adding routes
 -   Using Targets to build higher-level convenience APIs
 -   Borrowing concepts from other frameworks
 -   Bonus: Markdown???
 
-#### Demo it
+##### Demo it
 
 1. Look files
 2. Make pages OR check out PWA Studio branch with pages
@@ -98,24 +129,24 @@ The Target is a low-level extensibility "primitive". It's a building block for e
 4. Add DEPS_ADDL
 5. Watch, whee!
 
-#### Pairing w/ core contribution?
+##### Pairing w/ core contribution?
 
-### contentful-blog
+#### contentful-blog
 
-#### It demos:
+##### It demos:
 
 -   Adding visual items
 -   Changing API clients
 -   Content syndication!!!
 
-#### Demo it
+##### Demo it
 
 1. Look files
 2. Check out branch with add'l targets
 3. Add DEPS_ADDL
 4. Either make your own starter-gatsby-blog or use my public one (heroku?)
 
-#### Pairing w/ core contribution?
+##### Pairing w/ core contribution?
 
 1. Apollo links should be customizeable
 2. Adding an additional GQL API is maybe common
@@ -123,35 +154,6 @@ The Target is a low-level extensibility "primitive". It's a building block for e
 4. Schema stitching instead?
 
 ---
-
-## Installation
-
-1. Clone this repository
-
-2. Run `yarn` in repository root
-
-3. `cd` to the package in this repo that you want to try, and `yarn link` it:
-
-    ```sh
-    $ cd packages/secret-js-banner && \
-      yarn link
-    ```
-
-4. Now that the package is available in the global context, `cd` to your PWA project and link the package into there:
-
-    ```sh
-    $ cd ~/projects/my-pwa && \
-      yarn link @magento-research/pwa-experiment-secret-js-banner
-
-    ```
-
-5. Your PWA normally only runs targets from its explicitly declared dependencies. Add this experiment using the `BUILDBUS_DEPS_ADDITIONAL` environment variable. Specify it at the command line, or put it in your `.env` file:
-
-    ```sh
-    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-experiment-secret-js-banner
-    ```
-
-6. Run `yarn run build` in your PWA directory. The extension will take effect!
 
 ## More extension ideas
 

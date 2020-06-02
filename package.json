@@ -8,7 +8,7 @@
   ],
   "author": "Magento Commerce",
   "scripts": {
-    "linkto": "node ./studio-scripts/link.js",
+    "studiolink": "node ./studio-scripts/link.js",
     "lint": "eslint --ext .js --ext .json .",
     "prettier": "prettier --write '*.js'",
     "prettier:check": "prettier-check '*.js'",
