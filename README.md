@@ -45,24 +45,6 @@ It has scripts which connect the PWA project with the extension code in these pa
 
 Now that this repository's code is running in your PWA, it's time to review the concepts of PWA Studio Targets, and then explore the example modules and what features they demonstrate.
 
-## Concepts
-
-### Extensions
-
-PWA Studio extensions are very similar to [Webpack plugins](https://v4.webpack.js.org/api/plugins/), in that they use [Tapables](https://github.com/webpack/tapable) as individual extension points, to "hook in" to other parts of the framework.
-
-The big difference between the PWA Studio extension system and Webpack plugins is in how a project uses them. Webpack is designed for developers, so the way to add Webpack plugins is to manually install them with NPM, and then manually edit Webpack's JavaScript configuration file to add them.
-
-PWA Studio is designed for developers, sysadmins, and business users to customize, so it works a little bit more automatically. Instead of editing code, you can add and activate a PWA Studio extension in one step: by installing it with your package manager (NPM or Yarn). Buildpack, the PWA Studio toolkit, detects which installed packages are PWA Studio extensions, then automatically runs their code. After installing an extension with one command, e.g. `npm install @magento/pagebuilder`, a PWA project will integrate the new feature into the storefront with no additional work required .
-
-This works a lot like [Magento Commerce](https://magento.com/), the backend server for PWA Studio apps. If you make an extension for Magento which enhances its backend API and requires frontend changes as well, you can make a Composer package for the former and an NPM package for the latter; each will install and activate in one step.
-
-But when PWA Studio detects and runs extension code, what does that code do? It connects to the rest of your project using Targets.
-
-### Targets
-
-The Target is a low-level extensibility "primitive". It's a building block for extension functionality
-
 ## Walkthrough
 
 ### Each package demos a concept and a possibility. Walk through them in order
@@ -153,6 +135,70 @@ The Target is a low-level extensibility "primitive". It's a building block for e
 3. Does the split point link make sense?
 4. Schema stitching instead?
 
+## Concepts
+
+### Extensions
+
+PWA Studio extensions are very similar to [Webpack plugins](https://v4.webpack.js.org/api/plugins/), in that they use [Tapables][tapable] as individual extension points, to "hook in" to other parts of the framework.
+
+The big difference between the PWA Studio extension system and Webpack plugins is in how a project uses them. Webpack is designed for developers, so the way to add Webpack plugins is to manually install them with NPM, and then manually edit Webpack's JavaScript configuration file to add them.
+
+PWA Studio is designed for developers, sysadmins, and business users to customize, so it works a little bit more automatically. Instead of editing code, you can add and activate a PWA Studio extension in one step: by installing it with your package manager (NPM or Yarn). Buildpack, the PWA Studio toolkit, detects which installed packages are PWA Studio extensions, then automatically runs their code. After installing an extension with one command, e.g. `npm install @magento/pagebuilder`, a PWA project will integrate the new feature into the storefront with no additional work required .
+
+This works a lot like [Magento Commerce](https://magento.com/), the backend server for PWA Studio apps. If you make an extension for Magento which enhances its backend API and requires frontend changes as well, you can make a Composer package for the former and an NPM package for the latter; each will install and activate in one step.
+
+But when PWA Studio detects and runs extension code, what does that code do? It connects to the rest of your project using Targets.
+
+### Targets
+
+The Target is a low-level extensibility "primitive". It's a building block for extension functionality. More detail can be found in the developer documentation for PWA Studio, but it's time for a quick review.
+
+A Target is an enhanced [Tapable][tapable]. It's an object that an NPM module declares and uses to expose a part of its functionality to third-party code, via the interceptor pattern.
+
+An NPM package becomes a _PWA Studio extension_ when it _declares_ Targets, then _calls_ those targets in its own code. Those targets become available for all other PWA Studio code to _intercept_, via the Buildpack BuildBus.
+
+#### When Targets are used
+
+Targets run in NodeJS, in a few scripts but primarily in the build process. To invoke Targets, Buildpack creates a BuildBus object. That object runs the Target lifecycle in a prescribed order:
+
+1. **Declare**
+    1. BuildBus scans all installed extensions for declared Targets.
+    2. Extensions which declare Targets have a _declare file_, a NodeJS script
+2. **Intercept**: BuildBus scans all installed extensions for
+
+Targets don't run on the storefront. They run at build time and can _change_ the code that runs the storefront, but they are designed to resolve extension logic at build time in NodeJS, so they don't impose any performance cost at build time.
+
+#### What Targets do
+
+Targets run their interceptors in order when they are _called_. An extension first declares a target, then gives it functionality by _calling_ that Target at some point in its code.
+
+**Scenario**: You're the author of an extension called `@you/share-product`. It's a React component which turns product details into a menu of share buttons for social media sites. It's meant to be used on the Product Detail Page.
+
+##### lib/menu.js
+
+```js
+import React from 'react';
+import { Facebook, Twitter } from 'react-social-sharing';
+
+export const ShareMenu = ({ product }) => (
+    <aside>
+        <h2>
+            Share <em>{product.name}</em>:
+        </h2>
+        <Facebook link={product.canonical_url} />
+        <Twitter message={product.name} link={product.canonical_url} />
+    </aside>
+);
+```
+
+Now, you need to import it into
+
+##### lib/icons-list.json
+
+```json
+[{}]
+```
+
 ---
 
 ## More extension ideas
@@ -176,3 +222,5 @@ The Target is a low-level extensibility "primitive". It's a building block for e
 -   `dotenv` for local configurations
 -   Publishing instructions and best practices
 -   Demo of Marketplace integration TBD
+
+[tapable]: https://github.com/webpack/tapable
