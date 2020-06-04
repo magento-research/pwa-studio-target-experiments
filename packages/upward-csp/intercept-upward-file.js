@@ -28,7 +28,7 @@ module.exports = targets => {
                     Object.assign(definitions, cspDefinitions);
 
                     definitions.veniaAppShell.inline.headers.inline[
-                        'Content-Security-Policy'
+                        'Content-Security-Policy-Report-Only'
                     ] = DEF_NAME;
 
                     const newSource = jsYaml.safeDump(definitions);

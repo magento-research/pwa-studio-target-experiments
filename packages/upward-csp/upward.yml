@@ -11,5 +11,5 @@ pwaExperimentContentSecurityPolicy:
         use:
           inline: ""
     default:
-      inline: "default-src 'self' https: {{ backend }}; img-src 'self' https: data: mediastream: {{ backend }}; style-src 'self' https: 'unsafe-inline' {{ backend }}"
+      inline: "script-src http: https: {{ backend }}; style-src 'self' https: 'unsafe-inline' {{ backend }}; img-src data: http: https:; object-src 'none'; base-uri 'none'; child-src 'self'; font-src 'self';"
 
