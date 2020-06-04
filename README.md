@@ -43,67 +43,96 @@ It has scripts which connect the PWA project with the extension code in these pa
 
 6) Test your extensions: switch your computer's display settings to dark mode, for instance.
 
-Now that this repository's code is running in your PWA, it's time to review the concepts of PWA Studio Targets, and then explore the example modules and what features they demonstrate.
+Now that this repository's code is running in your PWA, it's time to look at how they work in more detail.
+If you want to review the concepts of Extensions and Targets, you can skip to [Concepts](#concepts) before continuing with the walkthrough.
 
 ## Walkthrough
 
-### Each package demos a concept and a possibility. Walk through them in order
+Each of the example extensions here demonstrates a concept of the type of functionality that can be customized, and a pattern for doing that customization.
+Some of the examples require new Targets that PWA Studio doesn't have yet! In those examples, you'll find a link to a pull request to PWA Studio, implementing these targets.
 
-#### upward-csp
+**⚠️ If an extension notes that it _requires_ new PWA Studio functionality to work, then it will cause errors if you try to run it on the `develop` branch. Instead, you can check out the branch in the linked pull request.**
 
-##### It demos:
+### 💡Example: [Content Security Policy for Venia](github.com/magento-research/pwa-studio-target-experiments/upward-csp)
 
--   access to webpack internals
--   upward extensibility
--   what you get from adding new targets
+This extension for Venia modifies the Venia UPWARD definition to send [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) headers for all pages. It automatically adds the Magento backend as a legal source, and it relaxes the security policy in developer mode while leaving it very strict in production. It currently is in Report-Only mode, because it's experimental!
 
-##### Demo it
+#### Demo Upward CSP
 
-1. Look at the files (not intercept-upward-target.js yet)
-2. In your Studio dir, add BUILDPACK_DEPS_ADDITIONAL=etc
-3. Full build and stage
-4. Whee!
+1. Make sure you have run `yarn run studiolink /path/to/pwa` in this repo root.
 
-##### Pairing with core contribution
+1. Open a terminal in `/path/to/pwa` and run:
 
-1. Lotsa boilerplate right now
-2. UPWARD mods are common, it should be a higher-level target
-3. Link to draft PR!
-4. In your Studio dir, check out draft PR branch
-5. Change your package.json intercept to use intercept-upward-target.js instead
+    ```sh
+    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-upward-csp yarn run build && \
+    yarn run stage:venia
+    ```
 
-#### venia-color-scheme
+1. View staging site in browser.
 
-##### It demos:
+1. Open your JS console and watch the report-only CSP errors pile up. In strict mode, these requests would be blocked.
 
--   Adding another transform type
--   Using color math and CSS vars
--   Declaring your OWN targets!
+#### Notes
 
-##### Demo it
+In its code, you'll find two different implementations of the same functionality. One of them is in `intercept-upward-file.js`, and the other is in `intercept-upward-target.js`.
+Out of the box, the extension uses `intercept-upward-file.js`, so look at that first.
 
-1. Look files
-2. Check out PWA Studio branch with style changes
-3. Add DEPS_ADDL
-4. Watch
-5. Change preferred scheme (Chrome, FF, etc) OR wait until nighttime
-6. omg
-7. Use color overrides target
+The code in `intercept-upward-file.js` is verbose. It needs to tap Webpack directly and use very generic module interceptors to find the UPWARD file in the compilation graph and manually modify it. Since UPWARD will be a very common target of customization, there should be a builtin Target to make it simpler to get to that logic.
 
-##### Pairing with core contribution
+#### Contribution
 
-1. Gotta fix that CSS, stay tuned, styleguide
+That's where the `intercept-upward-target.js` file comes in. This implementation **relies on a functionality that is currently in a [pull request to PWA Studio][pr_upward-csp]**. It adds a new Target which makes the same functionality much simpler and more maintainable, allowing us to use `intercept-upward-target.js` instead.
 
-#### nextjs-routes
+If you have the branch in that pull request available locally, you can run `yarn studiolink /path/to/branch` to test it out. With the branch checked out, edit `packages/upward-csp/package.json`. Change the `pwa-studio.targets.intercept` file path from `intercept-upward-file.js` to `intercept-upward-target.js` and rerun the build.
 
-##### It demos:
+### 💡Example: [Venia Color Scheme](github.com/magento-research/pwa-studio-target-experiments/venia-color-scheme)
 
--   Adding routes
--   Using Targets to build higher-level convenience APIs
--   Borrowing concepts from other frameworks
--   Bonus: Markdown???
+Venia stores its colors in CSS Variables in a global stylesheet, so that most of its component CSS is encapsulated in modules, but can use the same global color scheme.
+This extension for Venia modifies the core colors of the theme.
+It parses the CSS of the global stylesheet, then autogenerates a dark theme by manipulating the theme colors in the HSL color space, to preserve contrast and key colors.
 
-##### Demo it
+#### Demo Venia Color Scheme
+
+1. ⚠️ Have the pull request checked out in your `/path/to/pwa` directory. **This will not work on the develop branch of PWA Studio.**
+
+1. Make sure you have run `yarn run studiolink /path/to/pwa` in this repo root.
+
+1. Open a terminal in `/path/to/pwa` and run:
+
+    ```sh
+    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-venia-color-scheme yarn watch:venia
+    ```
+
+1. View site in browser.
+
+1. Switch between dark mode and light mode. There's no UI control; it detects your system preference.
+
+    **Here's how to set or simulate dark mode on:**
+
+    - [iOS](https://support.apple.com/en-us/HT210332#:~:text=To%20turn%20Dark%20Mode%20on,or%20at%20a%20specific%20time.)
+    - [Android](https://www.techradar.com/how-to/how-to-enable-dark-mode-on-android-10)
+    - [Google Chrome](https://stackoverflow.com/questions/57606960/how-can-i-emulate-prefers-color-scheme-media-query-in-chrome)
+    - [Firefox](https://stackoverflow.com/questions/56401662/firefox-how-to-test-prefers-color-scheme)
+    - [macOS](https://developer.apple.com/design/human-interface-guidelines/macos/visual-design/dark-mode/)
+    - [Windows](https://blogs.windows.com/windowsexperience/2019/04/01/windows-10-tip-dark-theme-in-file-explorer/)
+
+    Or, you could wait around a few hours. Time is a bitter, cosmic joke on us all.
+
+#### Notes
+
+This extension also declares its own target to allow the project, or other dependencies, to set overrides for certain colors.
+
+#### Contribution
+
+⛔️This extension **relies on a [pull request to PWA Studio][pr_venia-color-theme] to work**. This PR audits the Venia stylesheets to replace all remaining declarations with hardcoded colors. It also adds a new type of module transform to the `transformModule` target, called `postcss`! Both of these code changes are tremendously valuable to the PWA Studio core team as well as to integrators.
+
+### 💡Example: [NextJS-Style Routes](github.com/magento-research/pwa-studio-target-experiments/nextjs-routes)
+
+[NextJS](https://nextjs.org/) is a very popular and powerful framework for server-side-rendered React applications. It has a lot of friendly APIs and sensible organizational concepts. ~~So we thought we'd steal them~~ Some of these developer-friendly features can be brought to PWA Studio via the Targets framework.
+
+This extension adds NextJS-style [filesystem-based route structure](https://nextjs.org/docs/routing/introduction) to a PWA Studio app. It also shows how to implement more declarative, simple and strict interfaces "on top" of the low-level Targets.
+
+##### Demo NextJS Style Routes
 
 1. Look files
 2. Make pages OR check out PWA Studio branch with pages
@@ -135,9 +164,9 @@ Now that this repository's code is running in your PWA, it's time to review the 
 3. Does the split point link make sense?
 4. Schema stitching instead?
 
-## Concepts
+# Concepts
 
-### Extensions
+## Extensions
 
 PWA Studio extensions are very similar to [Webpack plugins](https://v4.webpack.js.org/api/plugins/), in that they use [Tapables][tapable] as individual extension points, to "hook in" to other parts of the framework.
 
@@ -149,7 +178,7 @@ This works a lot like [Magento Commerce](https://magento.com/), the backend serv
 
 But when PWA Studio detects and runs extension code, what does that code do? It connects to the rest of your project using Targets.
 
-### Targets
+## Targets
 
 The Target is a low-level extensibility "primitive". It's a building block for extension functionality. More detail can be found in the developer documentation for PWA Studio, but it's time for a quick review.
 
@@ -157,47 +186,173 @@ A Target is an enhanced [Tapable][tapable]. It's an object that an NPM module de
 
 An NPM package becomes a _PWA Studio extension_ when it _declares_ Targets, then _calls_ those targets in its own code. Those targets become available for all other PWA Studio code to _intercept_, via the Buildpack BuildBus.
 
-#### When Targets are used
+### When Targets are used
 
 Targets run in NodeJS, in a few scripts but primarily in the build process. To invoke Targets, Buildpack creates a BuildBus object. That object runs the Target lifecycle in a prescribed order:
 
 1. **Declare**
     1. BuildBus scans all installed extensions for declared Targets.
-    2. Extensions which declare Targets have a _declare file_, a NodeJS script
-2. **Intercept**: BuildBus scans all installed extensions for
+    1. Extensions which declare Targets have a _declare file_, a NodeJS script which exports a function.
+    1. BuildBus loads the declare file and calls that function with a `TargetProvider` object, an interface to the BuildBus.
+    1. The declare file should run `targets.declare(targetDictionary)` to publish Target objects so that other packages can use them.
+1. **Intercept**:
+    1. BuildBus scans all installed extensions for an _intercept files_.
+    1. BuildBus loads the intercept file and calls it in the same way as the `declare` file, but the passed `TargetProvider` is now fully stocked with declared targets from all dependencies.
+    1. The intercept file should run `targets.of(desiredDependencies)` to retrieve a dictionary of named targets, then tap those targets and pass callbacks with custom functionality.
+1. **Build**:
+    1. BuildBus is done scanning dependencies. The build process begins to call builtin targets (those targets declared by Buildpack itself) on BuildBus directly.
+    1. Interceptors execute, in turn calling other interceptors, until the build process completes. The implementation of interceptors and the timing of the Webpack compiler object will determine what order targets are called at this point.
 
 Targets don't run on the storefront. They run at build time and can _change_ the code that runs the storefront, but they are designed to resolve extension logic at build time in NodeJS, so they don't impose any performance cost at build time.
 
-#### What Targets do
+### What Targets do
 
 Targets run their interceptors in order when they are _called_. An extension first declares a target, then gives it functionality by _calling_ that Target at some point in its code.
 
-**Scenario**: You're the author of an extension called `@you/share-product`. It's a React component which turns product details into a menu of share buttons for social media sites. It's meant to be used on the Product Detail Page.
+#### ⚡️Scenario: Adding a Webpack plugin
 
-##### lib/menu.js
+You're the author of an extension called `@you/pwa-studio-dupcheck`. You want it to add the [DuplicatePackageCheckerPlugin](https://github.com/darrenscerri/duplicate-package-checker-webpack-plugin), which detects when multiple versions of the same code are bundled into the app, and warns the developer, so they can correct the issue and reduce bundle size. This is your code.
+
+##### apply-plugin.js
 
 ```js
-import React from 'react';
-import { Facebook, Twitter } from 'react-social-sharing';
+const DupCheckPlugin = require('duplicate-package-checker-webpack-plugin');
 
-export const ShareMenu = ({ product }) => (
-    <aside>
-        <h2>
-            Share <em>{product.name}</em>:
-        </h2>
-        <Facebook link={product.canonical_url} />
-        <Twitter message={product.name} link={product.canonical_url} />
-    </aside>
-);
+function intercept(targets) {
+    targets.of('@magento/pwa-buildpack').webpackCompiler.tap(compiler => {
+        const plugin = new DupCheckPlugin({ verbose: true });
+        plugin.apply(compiler);
+    });
+}
+
+module.exports = intercept;
 ```
 
-Now, you need to import it into
+##### package.json (excerpt)
 
-##### lib/icons-list.json
-
-```json
-[{}]
+```diff
+ [...]
++"pwa-studio": {
++    "targets": {
++        "intercept": "./apply-plugin.js"
++     }
++}
 ```
+
+Once a PWA project has `@you/pwa-studio-dupcheck` installed, its build process will log warnings when duplicate modules are detected!
+
+1. The PWA project calls `Buildpack.configureWebpack(config)` in its `webpack.config.js` file.
+
+1. In `configureWebpack()`, Buildpack creates a BuildBus.
+
+1. The BuildBus scans installed dependencies, and and finds the `pwa-studio.targets.intercept` in the extension's `package.json` as shown above.
+
+1. **Declare phase**: modules declare Targets. Buildpack declares its own first, including `webpackCompiler`.
+
+1. **Intercept phase**: BuildBus calls all intercept files, including `apply-plugin.js` as shown above.
+
+1. The extension gets the Buildpack `webpackCompiler` target and intercepts it via `.tap`, passing a synchronous callback.
+
+1. **Run phase**: With the initialized BuildBus, Buildpack continues assembling Webpack config.
+
+1. Webpack creates a Compiler object.
+
+1. **Buildpack calls its own `webpackCompiler` target, passing the compiler instance.**
+
+    ```js
+    // Simplified for readability
+    targets.own.webpackCompiler.call(compiler);
+    ```
+
+1. Each interceptor of `webpackCompiler` is called with the compiler object. The callback in `apply-plugin.js` runs.
+
+1. A new `DupCheckPlugin` adds itself to the Webpack compiler instance.
+
+#### ⚡️Scenario! Declare your own targets
+
+Users of your `@you/pwa-studio-dupcheck` extension are loving it, but some complain that they want to hide some of the warnings. There are a few duplicates that they simply _can't_ remove, so the plugin warnings clutter up the build log, tempting them to turn the entire plugin off.
+
+You see in `duplicate-package-checker-webpack-plugin`'s documentation that it has an option called `exclude`. You can pass an `options.exclude` function, which will be called for every duplicate. If that function returns true, the warning is not logged. That would solve this problem well!
+
+But the project that uses `@you/pwa-studio-dupcheck` does not have access to the constructor arguments of `DupCheckPlugin`. The interceptor is hiding in a dependency.
+
+You decide that `@you/pwa-studio-dupcheck` should declare its own target, so that other packages, including the app itself, can hide duplicate errors about certain modules.
+
+##### declare-dup-exclude.js
+
+```js
+function declare(targets) {
+    targets.declare({
+        exclude: new target.types.SyncBail(['instance'])
+    });
+}
+```
+
+##### package.json
+
+```diff
+ [...]
+ "pwa-studio": {
+     "targets": {
++        "declare": "./declare-dup-exclude.js",
+         "intercept": "./apply-plugin.js"
+      }
+ }
+```
+
+Now you've declared a Target. but it doesn't do anything yet. How do you _implement_ it?
+
+You'll almost always call your own targets _within your interceptors of other targets_. This is how the PWA Studio extension framework builds up rich functionality out of a small number of builtin targets from Buildpack itself.
+
+A `SyncBail` Target is one of the two types of Target which _return a value_. When you call this Target, it will call each of its interceptors with the supplied argument. If any of the interceptors return a non-undefined value, the Target "exits early", returning that value. It doesn't call the rest of the interceptors.
+
+This makes sense for the `options.exclude` function, since if any of the interceptors return true, then the passed module should be excluded.
+
+##### apply-plugin.js
+
+```diff
+ const DupCheckPlugin = require('duplicate-package-checker-webpack-plugin');
+
+ function intercept(targets) {
+     targets.of('@magento/pwa-buildpack').webpackCompiler.tap(compiler => {
+         const plugin = new DupCheckPlugin({
++          exclude: instance => targets.own.exclude.call(instance),
+           verbose: true
+         });
+         plugin.apply(compiler);
+     });
+ }
+
+ module.exports = intercept;
+```
+
+You're using your Target as the `options.exclude` function, so it has the same API as described in the [plugin documentation](https://github.com/darrenscerri/duplicate-package-checker-webpack-plugin#configuration). Except now, you've allowed the PWA project _and_ any other extensions to decide what to exclude!
+
+#### ⚡️Scenario: Using your new extension
+
+1. Install it in your PWA: `yarn add --dev @you/pwa-studio-dupcheck`
+
+1. Installed extensions activate in the next build. Run `yarn build`.
+
+1. Uh oh! Your build logs a warning that you're using two separate versions of `lodash`! ![Stolen from the plugin readme](https://raw.githubusercontent.com/darrenscerri/duplicate-package-checker-webpack-plugin/master/screenshot.png)
+
+1. First, you try and resolve it, using [Yarn resolutions](https://classic.yarnpkg.com/en/docs/selective-version-resolutions).
+
+1. But this breaks your app! It turns out that the dependencies which require `lodash` really do require mutually incompatible versions of it. You'll address this problem later; for now, you need to control noise in the build.
+
+1. Add to the `local-intercept.js` file in your project. (If you don't have one, set one up and list it in `package.json`).
+    ```js
+    targets.of('@you/pwa-studio-dupcheck').exclude.tap(instance => {
+        if (instance.name === 'lodash') {
+            return true;
+        }
+    });
+    ```
+1. On your next build, the `lodash` warning is quiet.
+
+Now you've created a useful extension, intercepted a builtin Target, declared your own Target, and demonstrated that it works!
+
+There's more to learn: you can use sync or async Targets, add special behavior to Targets via the `.intercept` meta-method, and most importantly, you can help PWA Studio out by noticing when something that should be easy in an extension system is too difficult. Fix it by opening an issue in PWA Studio and describing what you want, or even by forking PWA Studio, adding or enhancing the Target you want, and opening a pull request!
 
 ---
 
@@ -224,3 +379,5 @@ Now, you need to import it into
 -   Demo of Marketplace integration TBD
 
 [tapable]: https://github.com/webpack/tapable
+[pr_upward-csp]: https://github.com/magento/pwa-studio/pull/2459
+[pr_venia-color-theme]: https://github.com/magento/pwa-studio/pull/2460
