@@ -93,7 +93,7 @@ It parses the CSS of the global stylesheet, then autogenerates a dark theme by m
 
 #### Demo Venia Color Scheme
 
-1. ⚠️ Have the pull request checked out in your `/path/to/pwa` directory. **This will not work on the develop branch of PWA Studio.**
+1. ⚠️ Have the [companion PWA Studio pull request][pr_venia-color-theme] checked out in your `/path/to/pwa` directory. **This will not work on the develop branch of PWA Studio.**
 
 1. Make sure you have run `yarn run studiolink /path/to/pwa` in this repo root.
 
@@ -132,37 +132,97 @@ This extension also declares its own target to allow the project, or other depen
 
 This extension adds NextJS-style [filesystem-based route structure](https://nextjs.org/docs/routing/introduction) to a PWA Studio app. It also shows how to implement more declarative, simple and strict interfaces "on top" of the low-level Targets.
 
-##### Demo NextJS Style Routes
+#### Demo NextJS Style Routes
 
-1. Look files
-2. Make pages OR check out PWA Studio branch with pages
-3. Link to gist or draft PR?
-4. Add DEPS_ADDL
-5. Watch, whee!
+1. In your PWA Studio repository, create a new folder in `packages/venia-concept/src/` called `pages`.
 
-##### Pairing w/ core contribution?
+1. In that folder, create another folder called `compare`, and then in that folder, another folder called `[left]` (in brackets).
 
-#### contentful-blog
+1. Download [these examples](https://gist.github.com/zetlen/4c3d97ae2f83f414dfa78ff1fc8b172e) and put them in these new folders. You should end up with two new files in your repo:
 
-##### It demos:
+    ```sh
+    packages/venia-concept/src/pages/hello_next.md.js
+    packages/venia-concept/src/pages/compare/[left]/[right].js
+    ```
 
--   Adding visual items
--   Changing API clients
--   Content syndication!!!
+1. Make sure you have run `yarn run studiolink /path/to/pwa` in this repo root.
 
-##### Demo it
+1. Open a terminal in `/path/to/pwa` and run:
 
-1. Look files
-2. Check out branch with add'l targets
-3. Add DEPS_ADDL
-4. Either make your own starter-gatsby-blog or use my public one (heroku?)
+    ```sh
+    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-nextjs-routes yarn watch:venia
+    ```
 
-##### Pairing w/ core contribution?
+1. View site in browser. Go to `/hello_next.md`.
 
-1. Apollo links should be customizeable
-2. Adding an additional GQL API is maybe common
-3. Does the split point link make sense?
-4. Schema stitching instead?
+1. Now pick two product SKUs and visit `/compare/[sku1]/[sku2]`. On a Venia store, you could use `/compare/VA12-SI-NA/VA11-GO-NA`.
+
+#### Contribution
+
+This extension doesn't require any additional Target work from PWA Studio itself to work in a basic way. However, a few things might improve it:
+
+-   Better support for watch-mode dependency management in Targets
+-   Better exposal of resolver functions in Targets, to determine real fs paths
+-   Distinguishing between page routes and RootComponents
+
+### 💡Example: [Contentful Blog](github.com/magento-research/pwa-studio-target-experiments/contentful-blog)
+
+There's nothing worse than trying to put a "blog" on your web store using some "blog-lite" add-on to the commerce software. Dedicated blog platforms can't be
+beat for features; if only there was a way to smoothly integrate blog content on
+to your store without a jarring transition.
+
+This extension adds blog content from [Contentful](https://www.contentful.com/),
+by adding some routes and invisibly welding Magento GraphQL and Contentful GraphQL together.
+
+It demonstrates a few potentially common uses of the Targets framework:
+
+-   Adding visual items (the nav item, in this case)
+-   Adding configuration for external integrations
+-   Changing the behavior of API clients
+-   Injecting third-party content
+
+#### Demo the Contentful Blog
+
+1. Clone the [starter-gatsby-blog](https://github.com/contentful/starter-gatsby-blog) project into a sibling directory alongside your PWA Studio folder and this repository.
+
+1. Follow the instructions for setting up that site. Run the local development environment. When it is running locally, you can visit the localhost server to see what the content should look like. Make a note of the GraphQL endpoint logged in the terminal; it will be something like `http://localhost:8080/___graphql`
+
+1. ⚠️ Have the [companion PWA Studio pull request][pr_content-targets] checked out in your `/path/to/pwa` directory. **This will not work on the develop branch of PWA Studio.**
+
+1. Make sure you have run `yarn run studiolink /path/to/pwa` in this repo root.
+
+1. Open a terminal in `/path/to/pwa` and run:
+
+    ```sh
+    CONTENTFUL_GRAPHQL_ENDPOINT=http://localhost:8080/___graphql \
+    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-venia-color-scheme \
+    yarn watch:venia
+    ```
+
+1. View site in browser.
+
+1. Open the left nav. Observe the new nav item. Click it.
+
+1. Watch the network tab. Note that multiple GraphQL APIs are in use.
+
+1. Click a blog entry. Notice the slug in the URL.
+
+1. As an extra bonus, if you want to make a Contentful account and add/modify this sample content, do so and refresh your site to prove to yourself that all this data is live!
+
+#### Contribution
+
+⛔️This extension **relies on a [pull request to PWA Studio][pr_content-targets] to work**. This PR adds several targets to Venia to enable a seamless integration.
+
+-   VeniaUI has an `apolloLink` target, exposing the already composable concept of Apollo Links to PWA Studio extensions
+-   VeniaUI has a `navItems` target, exposing the main navigation menu in the same way that `routes` exposes the routing table
+
+### 💡Example: [Venia Critical CSS](github.com/magento-research/pwa-studio-target-experiments/critical-css)
+
+_Wouldn't you like to know._
+
+**TODO:** tell them
+
+---
 
 # Concepts
 
@@ -381,3 +441,4 @@ There's more to learn: you can use sync or async Targets, add special behavior t
 [tapable]: https://github.com/webpack/tapable
 [pr_upward-csp]: https://github.com/magento/pwa-studio/pull/2459
 [pr_venia-color-theme]: https://github.com/magento/pwa-studio/pull/2460
+[pr_content-targets]: https://github.com/magento/pwa-studio/pull/2461
