@@ -1,23 +1,25 @@
 {
-  "name": "@magento-research/pwa-secret-js-banner",
+  "name": "@magento-research/pwa-venia-critical-css",
   "version": "0.0.1",
-  "description": "Apply a Webpack plugin via a PWA Studio Target",
+  "description": "Critical CSS selection and inlining for Venia UI",
   "publishConfig": {
     "access": "public"
   },
   "license": "(OSL-3.0 OR AFL-3.0)",
   "repository": "github:magento-research/pwa-studio-target-experiments",
   "dependencies": {
-    "figlet": "^1.4.0"
+    "figlet": "^1.4.0",
+    "mini-css-extract-plugin": "^0.9.0"
   },
-  "main": "./PrettyBannerPlugin.js",
+  "main": "./critical-plugin.js",
   "peerDependencies": {
     "@magento/pwa-buildpack": "^5.1.1",
     "webpack": "~4.38.0"
   },
   "pwa-studio": {
     "targets": {
-      "intercept": "./apply-plugin"
+      "declare": "./declare-critical-target.js",
+      "intercept": "./intercept-compiler.js"
     }
   }
 }
