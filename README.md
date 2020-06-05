@@ -1,4 +1,4 @@
-# PWA Studio Target Experiments
+# PWA Studio Target Experiments <!-- omit in toc -->
 
 This repository is a collection of experimental PWA Studio extensions. Use it to learn about how such extensions are built and used.
 
@@ -8,28 +8,29 @@ This repository is a collection of experimental PWA Studio extensions. Use it to
 -   If you have general questions or comments about Magento PWAs, visit us at the [community Slack channel](http://slack.pwastudio.io) or go to the [Developer Documentation site](https://pwastudio.io).
 -   If you want to do something else, then I don't know why you're here, but you could go look at [people dancing to Steely Dan](https://twitter.com/steelydance), or go play the legendary 1993 video game [Star Control 2](http://sc2.sourceforge.net/).
 
-- [PWA Studio Target Experiments](#pwa-studio-target-experiments)
-  - [Setup](#setup)
-  - [Walkthrough](#walkthrough)
-    - [💡Example: Content Security Policy for Venia](#example-content-security-policy-for-venia)
-      - [💻 Demo Upward CSP](#-demo-upward-csp)
-      - [📝 Upward CSP Notes](#-upward-csp-notes)
-      - [🏆 Upward CSP Contribution](#-upward-csp-contribution)
-    - [💡Example: Venia Color Scheme](#example-venia-color-scheme)
-      - [💻 Demo `venia-color-scheme`](#-demo-venia-color-scheme)
-      - [How to Set Dark Mode](#how-to-set-dark-mode)
-      - [📝 Venia Color Scheme Notes](#-venia-color-scheme-notes)
-      - [🏆 Venia Color Scheme Contribution](#-venia-color-scheme-contribution)
-    - [💡Example: NextJS-Style Routes](#example-nextjs-style-routes)
-      - [💻 Demo NextJS Style Routes](#-demo-nextjs-style-routes)
-      - [🏆 NextJS Style Routes Contribution](#-nextjs-style-routes-contribution)
-    - [💡Example: Contentful Blog](#example-contentful-blog)
-      - [💻 Demo the Contentful Blog](#-demo-the-contentful-blog)
-      - [🏆 Contentful Blog Contribution](#-contentful-blog-contribution)
-    - [💡Example: Venia Critical CSS](#example-venia-critical-css)
-      - [💻 Demo Venia Critical CSS](#-demo-venia-critical-css)
-      - [📝 Venia Critical CSS Notes](#-venia-critical-css-notes)
-      - [🏆 Venia Critical CSS Contribution](#-venia-critical-css-contribution)
+## Contents <!-- omit in toc -->
+
+- [Setup](#setup)
+- [Walkthrough](#walkthrough)
+  - [💡Example: Content Security Policy for Venia](#example-content-security-policy-for-venia)
+    - [💻 Demo Upward CSP](#-demo-upward-csp)
+    - [📝 Upward CSP Notes](#-upward-csp-notes)
+    - [🏆 Upward CSP Contribution](#-upward-csp-contribution)
+  - [💡Example: Venia Color Scheme](#example-venia-color-scheme)
+    - [💻 Demo Venia Color Scheme](#-demo-venia-color-scheme)
+    - [How to Set Dark Mode](#how-to-set-dark-mode)
+    - [📝 Venia Color Scheme Notes](#-venia-color-scheme-notes)
+    - [🏆 Venia Color Scheme Contribution](#-venia-color-scheme-contribution)
+  - [💡Example: NextJS-Style Routes](#example-nextjs-style-routes)
+    - [💻 Demo NextJS Style Routes](#-demo-nextjs-style-routes)
+    - [🏆 NextJS Style Routes Contribution](#-nextjs-style-routes-contribution)
+  - [💡Example: Contentful Blog](#example-contentful-blog)
+    - [💻 Demo the Contentful Blog](#-demo-the-contentful-blog)
+    - [🏆 Contentful Blog Contribution](#-contentful-blog-contribution)
+  - [💡Example: Venia Critical CSS](#example-venia-critical-css)
+    - [💻 Demo Venia Critical CSS](#-demo-venia-critical-css)
+    - [📝 Venia Critical CSS Notes](#-venia-critical-css-notes)
+    - [🏆 Venia Critical CSS Contribution](#-venia-critical-css-contribution)
 - [Concepts](#concepts)
   - [Extensions](#extensions)
   - [Targets](#targets)
@@ -46,7 +47,7 @@ This repository is a collection of experimental PWA Studio extensions. Use it to
   - [More extension ideas](#more-extension-ideas)
   - [Future goodies for this repo](#future-goodies-for-this-repo)
 
-## Setup
+# Setup
 
 This repo should live in a sibling directory to your working copy of PWA Studio.
 It has scripts which connect the PWA project with the extension code in these packages, much like a filesystem dependency in Composer or a linked package in NPM.
@@ -84,7 +85,7 @@ It has scripts which connect the PWA project with the extension code in these pa
 Now that this repository's code is running in your PWA, it's time to look at how they work in more detail.
 If you want to review the concepts of Extensions and Targets, you can skip to [Concepts](#concepts) before continuing with the walkthrough.
 
-## Walkthrough
+# Walkthrough
 
 Each of the example extensions here demonstrates a concept of the type of functionality that can be customized, and a pattern for doing that customization.
 Some of the examples require new Targets that PWA Studio doesn't have yet! In those examples, you'll find a link to a pull request to PWA Studio, implementing these targets.
@@ -93,11 +94,11 @@ Some of the examples require new Targets that PWA Studio doesn't have yet! In th
 
 ---
 
-### 💡Example: [Content Security Policy for Venia](upward-csp)
+## 💡Example: [Content Security Policy for Venia](upward-csp)
 
 This extension for Venia modifies the Venia UPWARD definition to send [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) headers for all pages. It automatically adds the Magento backend as a legal source, and it relaxes the security policy in developer mode while leaving it very strict in production. It currently is in Report-Only mode, because it's experimental!
 
-#### 💻 Demo Upward CSP
+### 💻 Demo Upward CSP
 
 1. Make sure you have run `yarn run studiolink /path/to/pwa` in this repo root.
 
@@ -112,14 +113,14 @@ This extension for Venia modifies the Venia UPWARD definition to send [Content S
 
 1. Open your JS console and watch the report-only CSP errors pile up. In strict mode, these requests would be blocked.
 
-#### 📝 Upward CSP Notes
+### 📝 Upward CSP Notes
 
 In its code, you'll find two different implementations of the same functionality. One of them is in `intercept-upward-file.js`, and the other is in `intercept-upward-target.js`.
 Out of the box, the extension uses `intercept-upward-file.js`, so look at that first.
 
 The code in `intercept-upward-file.js` is verbose. It needs to tap Webpack directly and use very generic module interceptors to find the UPWARD file in the compilation graph and manually modify it. Since UPWARD will be a very common target of customization, there should be a builtin Target to make it simpler to get to that logic.
 
-#### 🏆 Upward CSP Contribution
+### 🏆 Upward CSP Contribution
 
 That's where the `intercept-upward-target.js` file comes in. This implementation **relies on a functionality that is currently in a [pull request to PWA Studio][pr_upward-csp]**. It adds a new Target which makes the same functionality much simpler and more maintainable, allowing us to use `intercept-upward-target.js` instead. You can demo this workflow too.
 
@@ -129,14 +130,14 @@ That's where the `intercept-upward-target.js` file comes in. This implementation
 
 ---
 
-### 💡Example: [Venia Color Scheme](venia-color-scheme)
+## 💡Example: [Venia Color Scheme](venia-color-scheme)
 
 Venia stores its colors in CSS Variables in a global stylesheet, so that even though most of its component CSS is encapsulated in modules, they can use the same global color scheme.
 
 This extension for Venia adds a "dark mode".
 It parses the CSS of the global stylesheet, then autogenerates a dark theme by manipulating the theme colors in the HSL color space, to preserve contrast and key colors. It puts that dark theme in a `prefers-color-scheme: dark` media query.
 
-#### 💻 Demo `venia-color-scheme`
+### 💻 Demo Venia Color Scheme
 
 1. ⚠️ Have the [companion PWA Studio pull request][pr_venia-color-theme] checked out in your `/path/to/pwa` directory. **This will not work on the develop branch of PWA Studio.**
 
@@ -153,7 +154,7 @@ It parses the CSS of the global stylesheet, then autogenerates a dark theme by m
 
 1. Switch between dark mode and light mode. There's no UI control; it detects your system preference.
 
-#### How to Set Dark Mode
+### How to Set Dark Mode
 
 | [**iOS**](https://support.apple.com/en-us/HT210332#:~:text=To%20turn%20Dark%20Mode%20on,or%20at%20a%20specific%20time.) | [**Android**](https://www.techradar.com/how-to/how-to-enable-dark-mode-on-android-10)                     | [**Google Chrome**](https://stackoverflow.com/questions/57606960/how-can-i-emulate-prefers-color-scheme-media-query-in-chrome) |
 | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -161,11 +162,11 @@ It parses the CSS of the global stylesheet, then autogenerates a dark theme by m
 
 Or, you could wait around a few hours. Time is a bitter, cosmic joke on us all.
 
-#### 📝 Venia Color Scheme Notes
+### 📝 Venia Color Scheme Notes
 
 This extension also declares its own target to allow the project, or other dependencies, to set overrides for certain colors.
 
-#### 🏆 Venia Color Scheme Contribution
+### 🏆 Venia Color Scheme Contribution
 
 ⛔️This extension **relies on a [pull request to PWA Studio][pr_venia-color-theme] to work**. This PR replaces the (very few) hardcoded color declarations throughout the Venia stylesheets with global color variables.
 
@@ -174,13 +175,13 @@ It also adds a new type of module transform to the `transformModule` target, cal
 
 ---
 
-### 💡Example: [NextJS-Style Routes](nextjs-routes)
+## 💡Example: [NextJS-Style Routes](nextjs-routes)
 
 [NextJS](https://nextjs.org/) is a very popular and powerful framework for server-side-rendered React applications. It has a lot of friendly APIs and sensible organizational concepts. ~~So we thought we'd steal them~~ Some of these developer-friendly features can be brought to PWA Studio via the Targets framework.
 
 This extension adds NextJS-style [filesystem-based route structure](https://nextjs.org/docs/routing/introduction) to a PWA Studio app. It also shows how to implement more declarative, simple and strict interfaces "on top" of the low-level Targets.
 
-#### 💻 Demo NextJS Style Routes
+### 💻 Demo NextJS Style Routes
 
 1. In your PWA Studio repository, create a new folder in `packages/venia-concept/src/` called `pages`.
 
@@ -206,7 +207,7 @@ This extension adds NextJS-style [filesystem-based route structure](https://next
 
 1. Now pick two product SKUs and visit `/compare/[sku1]/[sku2]`. On a Venia store, you could use `/compare/VA12-SI-NA/VA11-GO-NA`.
 
-#### 🏆 NextJS Style Routes Contribution
+### 🏆 NextJS Style Routes Contribution
 
 This extension doesn't require any additional Target work from PWA Studio itself to work in a basic way. However, a few things might improve it:
 
@@ -216,7 +217,7 @@ This extension doesn't require any additional Target work from PWA Studio itself
 
 ---
 
-### 💡Example: [Contentful Blog](contentful-blog)
+## 💡Example: [Contentful Blog](contentful-blog)
 
 There's nothing worse than trying to put a "blog" on your web store using a bare-bones add-on to your ecommerce store.. Dedicated blog platforms can't be
 beat for features; if only there was a way to smoothly integrate blog content on
@@ -232,7 +233,7 @@ It demonstrates a few potentially common uses of the Targets framework:
 -   Changing the behavior of API clients
 -   Injecting third-party content
 
-#### 💻 Demo the Contentful Blog
+### 💻 Demo the Contentful Blog
 
 1. Clone the [starter-gatsby-blog](https://github.com/contentful/starter-gatsby-blog) project into a sibling directory alongside your PWA Studio folder and this repository.
 
@@ -260,7 +261,7 @@ It demonstrates a few potentially common uses of the Targets framework:
 
 1. As an extra bonus, if you want to make a Contentful account and add/modify this sample content, do so and refresh your site to prove to yourself that all this data is live!
 
-#### 🏆 Contentful Blog Contribution
+### 🏆 Contentful Blog Contribution
 
 ⛔️This extension **relies on a [pull request to PWA Studio][pr_content-targets] to work**. This PR adds several targets to Venia to enable a seamless integration:
 
@@ -269,7 +270,7 @@ It demonstrates a few potentially common uses of the Targets framework:
 
 ---
 
-### 💡Example: [Venia Critical CSS](venia-critical-css)
+## 💡Example: [Venia Critical CSS](venia-critical-css)
 
 A great PWA store gives your new shopper a good impression by loading as quickly as possible. One of the most important PWA best practices is to identify your [critical rendering path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path) and optimize the resources necessary for it as much as possible. One part of that is to [find and inline the "critical CSS" for your critical path](https://web.dev/extract-critical-css/).
 
@@ -279,7 +280,7 @@ This extension for Venia enhances the Webpack compiler to extract the CSS for a 
 -   Working with the [`HtmlWebpackPlugin`](https://github.com/jantimon/html-webpack-plugin/) and its own extension hooks to customize the application shell
 -   ~~How bad choices can make your extension annoying and useless~~ 🌈✨ **_Fun goodies!_** 🎉🌈
 
-#### 💻 Demo Venia Critical CSS
+### 💻 Demo Venia Critical CSS
 
 1. Make sure you have run `yarn run studiolink /path/to/pwa` in this repo root.
 
@@ -295,13 +296,13 @@ This extension for Venia enhances the Webpack compiler to extract the CSS for a 
 
 1. View page source to see what happened.
 
-#### 📝 Venia Critical CSS Notes
+### 📝 Venia Critical CSS Notes
 
 This is a proof-of-concept. It would be a much more noticeable speed boost if the critical path was also rendered with SSR, perhaps just constructing the outside of the page at build time.
 
 It's designed for Venia alone. It relies on a manual list of Venia components to inline; it can't detect the critical path of your app automatically.
 
-#### 🏆 Venia Critical CSS Contribution
+### 🏆 Venia Critical CSS Contribution
 
 Ways to improve on the shortcomings mentioned above might include:
 
