@@ -5,8 +5,8 @@ This repository is a collection of experimental PWA Studio extensions. Use it to
 -   If you want to make PWA Studio extensions, this project is for you.
 -   If you want to build stores with PWA Studio and use extensions, this project is for you.
 -   If you want to open an issue about PWA Studio extensions, go to the [PWA Studio repository issues page](https://github.com/magento/pwa-studio).
--   If you have general questions or comments about Magento PWAs, visit us at the [community Slack channel](slack.pwastudio.io) or go to the [Developer Documentation site](pwastudio.io).
--   If you want to do something else, then I don't know why you're here, but you could go look at [people dancing to Steely Dan](https://twitter.com/steelydance), or go play the legendary 1993 video game [Star Control 2](http://sc2.sourceforge.net/). _Vaya con dios._
+-   If you have general questions or comments about Magento PWAs, visit us at the [community Slack channel](http://slack.pwastudio.io) or go to the [Developer Documentation site](https://pwastudio.io).
+-   If you want to do something else, then I don't know why you're here, but you could go look at [people dancing to Steely Dan](https://twitter.com/steelydance), or go play the legendary 1993 video game [Star Control 2](http://sc2.sourceforge.net/).
 
 ## Setup
 
@@ -17,15 +17,15 @@ It has scripts which connect the PWA project with the extension code in these pa
 
 2. Run `yarn install` in the repository root. This repo uses [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces), like PWA Studio does, so this command will also install all the dependencies in `packages/`.
 
-3. Here comes the magic! In the repository root, run `yarn studiolink </path/to/your/pwa_studio_repo>`.
-   Use the _absolute path_ to your PWA Studio repo.
+3. Here comes the magic! In the repository root, run `yarn studiolink </path/to/your/pwa_studio_repo>`.  
+   ℹ️ _Use the **absolute path** to your PWA Studio repo._
 
     ```sh
     yarn studiolink /Users/jzetlen/Projects/pwa-studio/packages/venia-concept
     ```
 
-    All the packages in `packages` are now available to `require()` and `import` in your PWA project.
-    _(From now on, if you run `yarn install` in your PWA project, you may have to re-run this command)._
+    All the packages in `packages` are now available to `require()` and `import` in your PWA project.  
+     ℹ️ _From now on, if you run `yarn install` in your PWA project, you may have to re-run this command._
 
 4) Your PWA normally only runs targets from its explicitly declared dependencies.
    However, these modules aren't published to NPM, so if you explicitly declared one in `package.json` it would cause problems on install.
@@ -53,45 +53,52 @@ Some of the examples require new Targets that PWA Studio doesn't have yet! In th
 
 **⚠️ If an extension notes that it _requires_ new PWA Studio functionality to work, then it will cause errors if you try to run it on the `develop` branch. Instead, you can check out the branch in the linked pull request.**
 
-### 💡Example: [Content Security Policy for Venia](github.com/magento-research/pwa-studio-target-experiments/upward-csp)
+---
+
+### 💡Example: [Content Security Policy for Venia](upward-csp)
 
 This extension for Venia modifies the Venia UPWARD definition to send [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) headers for all pages. It automatically adds the Magento backend as a legal source, and it relaxes the security policy in developer mode while leaving it very strict in production. It currently is in Report-Only mode, because it's experimental!
 
-#### Demo Upward CSP
+#### 💻 Demo Upward CSP
 
 1. Make sure you have run `yarn run studiolink /path/to/pwa` in this repo root.
 
 1. Open a terminal in `/path/to/pwa` and run:
 
     ```sh
-    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-upward-csp yarn run build && \
-    yarn run stage:venia
+    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-upward-csp \
+    yarn run build && yarn run stage:venia
     ```
 
 1. View staging site in browser.
 
 1. Open your JS console and watch the report-only CSP errors pile up. In strict mode, these requests would be blocked.
 
-#### Notes
+#### 📝 Upward CSP Notes
 
 In its code, you'll find two different implementations of the same functionality. One of them is in `intercept-upward-file.js`, and the other is in `intercept-upward-target.js`.
 Out of the box, the extension uses `intercept-upward-file.js`, so look at that first.
 
 The code in `intercept-upward-file.js` is verbose. It needs to tap Webpack directly and use very generic module interceptors to find the UPWARD file in the compilation graph and manually modify it. Since UPWARD will be a very common target of customization, there should be a builtin Target to make it simpler to get to that logic.
 
-#### Contribution
+#### 🏆 Upward CSP Contribution
 
-That's where the `intercept-upward-target.js` file comes in. This implementation **relies on a functionality that is currently in a [pull request to PWA Studio][pr_upward-csp]**. It adds a new Target which makes the same functionality much simpler and more maintainable, allowing us to use `intercept-upward-target.js` instead.
+That's where the `intercept-upward-target.js` file comes in. This implementation **relies on a functionality that is currently in a [pull request to PWA Studio][pr_upward-csp]**. It adds a new Target which makes the same functionality much simpler and more maintainable, allowing us to use `intercept-upward-target.js` instead. You can demo this workflow too.
 
-If you have the branch in that pull request available locally, you can run `yarn studiolink /path/to/branch` to test it out. With the branch checked out, edit `packages/upward-csp/package.json`. Change the `pwa-studio.targets.intercept` file path from `intercept-upward-file.js` to `intercept-upward-target.js` and rerun the build.
+1. ⚠️ Have the [companion PWA Studio pull request][pr_upward-csp] checked out in your `/path/to/pwa` directory. **This will not work on the develop branch of PWA Studio.**
+1. Edit `packages/upward-csp/package.json` in this repository. Change the `pwa-studio.targets.intercept` file path from `intercept-upward-file.js` to `intercept-upward-target.js` and save.
+1. Go to [step 1](#demo-upward-csp) above.
 
-### 💡Example: [Venia Color Scheme](github.com/magento-research/pwa-studio-target-experiments/venia-color-scheme)
+---
 
-Venia stores its colors in CSS Variables in a global stylesheet, so that most of its component CSS is encapsulated in modules, but can use the same global color scheme.
-This extension for Venia modifies the core colors of the theme.
-It parses the CSS of the global stylesheet, then autogenerates a dark theme by manipulating the theme colors in the HSL color space, to preserve contrast and key colors.
+### 💡Example: [Venia Color Scheme](venia-color-scheme)
 
-#### Demo Venia Color Scheme
+Venia stores its colors in CSS Variables in a global stylesheet, so that even though most of its component CSS is encapsulated in modules, they can use the same global color scheme.
+
+This extension for Venia adds a "dark mode".
+It parses the CSS of the global stylesheet, then autogenerates a dark theme by manipulating the theme colors in the HSL color space, to preserve contrast and key colors. It puts that dark theme in a `prefers-color-scheme: dark` media query.
+
+#### 💻 Demo `venia-color-scheme`
 
 1. ⚠️ Have the [companion PWA Studio pull request][pr_venia-color-theme] checked out in your `/path/to/pwa` directory. **This will not work on the develop branch of PWA Studio.**
 
@@ -100,39 +107,42 @@ It parses the CSS of the global stylesheet, then autogenerates a dark theme by m
 1. Open a terminal in `/path/to/pwa` and run:
 
     ```sh
-    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-venia-color-scheme yarn watch:venia
+    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-venia-color-scheme \
+    yarn watch:venia
     ```
 
 1. View site in browser.
 
 1. Switch between dark mode and light mode. There's no UI control; it detects your system preference.
 
-    **Here's how to set or simulate dark mode on:**
+#### How to Set Dark Mode
 
-    - [iOS](https://support.apple.com/en-us/HT210332#:~:text=To%20turn%20Dark%20Mode%20on,or%20at%20a%20specific%20time.)
-    - [Android](https://www.techradar.com/how-to/how-to-enable-dark-mode-on-android-10)
-    - [Google Chrome](https://stackoverflow.com/questions/57606960/how-can-i-emulate-prefers-color-scheme-media-query-in-chrome)
-    - [Firefox](https://stackoverflow.com/questions/56401662/firefox-how-to-test-prefers-color-scheme)
-    - [macOS](https://developer.apple.com/design/human-interface-guidelines/macos/visual-design/dark-mode/)
-    - [Windows](https://blogs.windows.com/windowsexperience/2019/04/01/windows-10-tip-dark-theme-in-file-explorer/)
+| [**iOS**](https://support.apple.com/en-us/HT210332#:~:text=To%20turn%20Dark%20Mode%20on,or%20at%20a%20specific%20time.) | [**Android**](https://www.techradar.com/how-to/how-to-enable-dark-mode-on-android-10)                     | [**Google Chrome**](https://stackoverflow.com/questions/57606960/how-can-i-emulate-prefers-color-scheme-media-query-in-chrome) |
+| ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [**Firefox**](https://stackoverflow.com/questions/56401662/firefox-how-to-test-prefers-color-scheme)                    | [**macOS**](https://developer.apple.com/design/human-interface-guidelines/macos/visual-design/dark-mode/) | [**Windows**](https://blogs.windows.com/windowsexperience/2019/04/01/windows-10-tip-dark-theme-in-file-explorer/)              |
 
-    Or, you could wait around a few hours. Time is a bitter, cosmic joke on us all.
+Or, you could wait around a few hours. Time is a bitter, cosmic joke on us all.
 
-#### Notes
+#### 📝 Venia Color Scheme Notes
 
 This extension also declares its own target to allow the project, or other dependencies, to set overrides for certain colors.
 
-#### Contribution
+#### 🏆 Venia Color Scheme Contribution
 
-⛔️This extension **relies on a [pull request to PWA Studio][pr_venia-color-theme] to work**. This PR audits the Venia stylesheets to replace all remaining declarations with hardcoded colors. It also adds a new type of module transform to the `transformModule` target, called `postcss`! Both of these code changes are tremendously valuable to the PWA Studio core team as well as to integrators.
+⛔️This extension **relies on a [pull request to PWA Studio][pr_venia-color-theme] to work**. This PR replaces the (very few) hardcoded color declarations throughout the Venia stylesheets with global color variables.
 
-### 💡Example: [NextJS-Style Routes](github.com/magento-research/pwa-studio-target-experiments/nextjs-routes)
+It also adds a new type of module transform to the `transformModule` target, called `postcss`!  
+ℹ️ _If you find these additions valuable, please [comment on the pull request][pr_venia-color-theme] to urge the merge._
+
+---
+
+### 💡Example: [NextJS-Style Routes](nextjs-routes)
 
 [NextJS](https://nextjs.org/) is a very popular and powerful framework for server-side-rendered React applications. It has a lot of friendly APIs and sensible organizational concepts. ~~So we thought we'd steal them~~ Some of these developer-friendly features can be brought to PWA Studio via the Targets framework.
 
 This extension adds NextJS-style [filesystem-based route structure](https://nextjs.org/docs/routing/introduction) to a PWA Studio app. It also shows how to implement more declarative, simple and strict interfaces "on top" of the low-level Targets.
 
-#### Demo NextJS Style Routes
+#### 💻 Demo NextJS Style Routes
 
 1. In your PWA Studio repository, create a new folder in `packages/venia-concept/src/` called `pages`.
 
@@ -150,14 +160,15 @@ This extension adds NextJS-style [filesystem-based route structure](https://next
 1. Open a terminal in `/path/to/pwa` and run:
 
     ```sh
-    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-nextjs-routes yarn watch:venia
+    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-nextjs-routes \
+    yarn watch:venia
     ```
 
 1. View site in browser. Go to `/hello_next.md`.
 
 1. Now pick two product SKUs and visit `/compare/[sku1]/[sku2]`. On a Venia store, you could use `/compare/VA12-SI-NA/VA11-GO-NA`.
 
-#### Contribution
+#### 🏆 NextJS Style Routes Contribution
 
 This extension doesn't require any additional Target work from PWA Studio itself to work in a basic way. However, a few things might improve it:
 
@@ -165,9 +176,11 @@ This extension doesn't require any additional Target work from PWA Studio itself
 -   Better exposal of resolver functions in Targets, to determine real fs paths
 -   Distinguishing between page routes and RootComponents
 
-### 💡Example: [Contentful Blog](github.com/magento-research/pwa-studio-target-experiments/contentful-blog)
+---
 
-There's nothing worse than trying to put a "blog" on your web store using some "blog-lite" add-on to the commerce software. Dedicated blog platforms can't be
+### 💡Example: [Contentful Blog](contentful-blog)
+
+There's nothing worse than trying to put a "blog" on your web store using a bare-bones add-on to your ecommerce store.. Dedicated blog platforms can't be
 beat for features; if only there was a way to smoothly integrate blog content on
 to your store without a jarring transition.
 
@@ -181,11 +194,11 @@ It demonstrates a few potentially common uses of the Targets framework:
 -   Changing the behavior of API clients
 -   Injecting third-party content
 
-#### Demo the Contentful Blog
+#### 💻 Demo the Contentful Blog
 
 1. Clone the [starter-gatsby-blog](https://github.com/contentful/starter-gatsby-blog) project into a sibling directory alongside your PWA Studio folder and this repository.
 
-1. Follow the instructions for setting up that site. Run the local development environment. When it is running locally, you can visit the localhost server to see what the content should look like. Make a note of the GraphQL endpoint logged in the terminal; it will be something like `http://localhost:8080/___graphql`
+1. Follow the instructions for setting up that site. Run the local development environment. When it is running locally, you can visit the localhost server to see what the content should look like. Make a note of the GraphQL endpoint logged in the terminal; it will be something like `http://localhost:8080/___graphql`.
 
 1. ⚠️ Have the [companion PWA Studio pull request][pr_content-targets] checked out in your `/path/to/pwa` directory. **This will not work on the develop branch of PWA Studio.**
 
@@ -209,18 +222,60 @@ It demonstrates a few potentially common uses of the Targets framework:
 
 1. As an extra bonus, if you want to make a Contentful account and add/modify this sample content, do so and refresh your site to prove to yourself that all this data is live!
 
-#### Contribution
+#### 🏆 Contentful Blog Contribution
 
-⛔️This extension **relies on a [pull request to PWA Studio][pr_content-targets] to work**. This PR adds several targets to Venia to enable a seamless integration.
+⛔️This extension **relies on a [pull request to PWA Studio][pr_content-targets] to work**. This PR adds several targets to Venia to enable a seamless integration:
 
 -   VeniaUI has an `apolloLink` target, exposing the already composable concept of Apollo Links to PWA Studio extensions
 -   VeniaUI has a `navItems` target, exposing the main navigation menu in the same way that `routes` exposes the routing table
 
-### 💡Example: [Venia Critical CSS](github.com/magento-research/pwa-studio-target-experiments/critical-css)
+---
 
-_Wouldn't you like to know._
+### 💡Example: [Venia Critical CSS](venia-critical-css)
 
-**TODO:** tell them
+A great PWA store gives your new shopper a good impression by loading as quickly as possible. One of the most important PWA best practices is to identify your [critical rendering path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path) and optimize the resources necessary for it as much as possible. One part of that is to [find and inline the "critical CSS" for your critical path](https://web.dev/extract-critical-css/).
+
+This extension for Venia enhances the Webpack compiler to extract the CSS for a hand-picked list of modules in the Venia critical path, and then to inline that CSS directly into the `index.html` application shell. It demonstrates:
+
+-   How to do more advanced build integrations with Webpack hooks alone
+-   Working with the [`HtmlWebpackPlugin`](https://github.com/jantimon/html-webpack-plugin/) and its own extension hooks to customize the application shell
+-   ~~How bad choices can make your extension annoying and useless~~ 🌈✨ **_Fun goodies!_** 🎉🌈
+
+#### 💻 Demo Venia Critical CSS
+
+1. Make sure you have run `yarn run studiolink /path/to/pwa` in this repo root.
+
+1. Open a terminal in `/path/to/pwa` and run:
+
+    ```sh
+    CONTENTFUL_GRAPHQL_ENDPOINT=http://localhost:8080/___graphql \
+    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-venia-critical-css \
+    yarn build && yarn stage:venia
+    ```
+
+1. View site in browser. Loads a bit faster, huh?
+
+1. View page source to see what happened.
+
+#### 📝 Venia Critical CSS Notes
+
+This is a proof-of-concept. It would be a much more noticeable speed boost if the critical path was also rendered with SSR, perhaps just constructing the outside of the page at build time.
+
+It's designed for Venia alone. It relies on a manual list of Venia components to inline; it can't detect the critical path of your app automatically.
+
+#### 🏆 Venia Critical CSS Contribution
+
+Ways to improve on the shortcomings mentioned above might include:
+
+-   Use one of the many critical-path-detecting tools at build time
+    -   [Webpack Critters](https://github.com/GoogleChromeLabs/critters) (fastest)
+    -   [Penthouse](https://github.com/pocketjoso/penthouse)
+    -   [Critical](https://github.com/addyosmani/critical)
+    -   [react-snap](https://github.com/stereobooster/react-snap)
+-   Change Webpack `optimize` parameters to combine stylesheets
+-   Refactor Venia to load the critical path synchronously and then subsequent stylesheets asynchronously
+
+💁‍♂️ **There you have it: five quick PWA Studio extensions!** Please, feel free to PR this repository and contribute more. Read on for a reintroduction to the concepts behind Targets.
 
 ---
 
@@ -348,7 +403,7 @@ function declare(targets) {
 }
 ```
 
-##### package.json
+##### package.json (another excerpt)
 
 ```diff
  [...]
@@ -368,22 +423,13 @@ A `SyncBail` Target is one of the two types of Target which _return a value_. Wh
 
 This makes sense for the `options.exclude` function, since if any of the interceptors return true, then the passed module should be excluded.
 
-##### apply-plugin.js
+##### apply-plugin.js (excerpt)
 
 ```diff
- const DupCheckPlugin = require('duplicate-package-checker-webpack-plugin');
-
- function intercept(targets) {
-     targets.of('@magento/pwa-buildpack').webpackCompiler.tap(compiler => {
-         const plugin = new DupCheckPlugin({
-+          exclude: instance => targets.own.exclude.call(instance),
-           verbose: true
-         });
-         plugin.apply(compiler);
-     });
- }
-
- module.exports = intercept;
+ const plugin = new DupCheckPlugin({
++  exclude: instance => targets.own.exclude.call(instance),
+   verbose: true
+ });
 ```
 
 You're using your Target as the `options.exclude` function, so it has the same API as described in the [plugin documentation](https://github.com/darrenscerri/duplicate-package-checker-webpack-plugin#configuration). Except now, you've allowed the PWA project _and_ any other extensions to decide what to exclude!
