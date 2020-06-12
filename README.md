@@ -287,7 +287,6 @@ This extension for Venia enhances the Webpack compiler to extract the CSS for a 
 1. Open a terminal in `/path/to/pwa` and run:
 
     ```sh
-    CONTENTFUL_GRAPHQL_ENDPOINT=http://localhost:8080/___graphql \
     BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-venia-critical-css \
     yarn build && yarn stage:venia
     ```
