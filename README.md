@@ -94,7 +94,7 @@ Some of the examples require new Targets that PWA Studio doesn't have yet! In th
 
 ---
 
-## 💡Example: [Content Security Policy for Venia](upward-csp)
+## 💡Example: [Content Security Policy for Venia](packages/upward-csp)
 
 This extension for Venia modifies the Venia UPWARD definition to send [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) headers for all pages. It automatically adds the Magento backend as a legal source, and it relaxes the security policy in developer mode while leaving it very strict in production. It currently is in Report-Only mode, because it's experimental!
 
@@ -130,7 +130,7 @@ That's where the `intercept-upward-target.js` file comes in. This implementation
 
 ---
 
-## 💡Example: [Venia Color Scheme](venia-color-scheme)
+## 💡Example: [Venia Color Scheme](packages/venia-color-scheme)
 
 Venia stores its colors in CSS Variables in a global stylesheet, so that even though most of its component CSS is encapsulated in modules, they can use the same global color scheme.
 
@@ -175,7 +175,7 @@ It also adds a new type of module transform to the `transformModule` target, cal
 
 ---
 
-## 💡Example: [NextJS-Style Routes](nextjs-routes)
+## 💡Example: [NextJS-Style Routes](packages/nextjs-routes)
 
 [NextJS](https://nextjs.org/) is a very popular and powerful framework for server-side-rendered React applications. It has a lot of friendly APIs and sensible organizational concepts. ~~So we thought we'd steal them~~ Some of these developer-friendly features can be brought to PWA Studio via the Targets framework.
 
@@ -217,7 +217,7 @@ This extension doesn't require any additional Target work from PWA Studio itself
 
 ---
 
-## 💡Example: [Contentful Blog](contentful-blog)
+## 💡Example: [Contentful Blog](packages/contentful-blog)
 
 There's nothing worse than trying to put a "blog" on your web store using a bare-bones add-on to your ecommerce store.. Dedicated blog platforms can't be
 beat for features; if only there was a way to smoothly integrate blog content on
@@ -270,7 +270,7 @@ It demonstrates a few potentially common uses of the Targets framework:
 
 ---
 
-## 💡Example: [Venia Critical CSS](venia-critical-css)
+## 💡Example: [Venia Critical CSS](packages/venia-critical-css)
 
 A great PWA store gives your new shopper a good impression by loading as quickly as possible. One of the most important PWA best practices is to identify your [critical rendering path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path) and optimize the resources necessary for it as much as possible. One part of that is to [find and inline the "critical CSS" for your critical path](https://web.dev/extract-critical-css/).
 
