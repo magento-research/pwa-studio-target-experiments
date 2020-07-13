@@ -10,42 +10,42 @@ This repository is a collection of experimental PWA Studio extensions. Use it to
 
 ## Contents <!-- omit in toc -->
 
-- [Setup](#setup)
-- [Walkthrough](#walkthrough)
-  - [💡Example: Content Security Policy for Venia](#example-content-security-policy-for-venia)
-    - [💻 Demo Upward CSP](#-demo-upward-csp)
-    - [📝 Upward CSP Notes](#-upward-csp-notes)
-    - [🏆 Upward CSP Contribution](#-upward-csp-contribution)
-  - [💡Example: Venia Color Scheme](#example-venia-color-scheme)
-    - [💻 Demo Venia Color Scheme](#-demo-venia-color-scheme)
-    - [How to Set Dark Mode](#how-to-set-dark-mode)
-    - [📝 Venia Color Scheme Notes](#-venia-color-scheme-notes)
-    - [🏆 Venia Color Scheme Contribution](#-venia-color-scheme-contribution)
-  - [💡Example: NextJS-Style Routes](#example-nextjs-style-routes)
-    - [💻 Demo NextJS Style Routes](#-demo-nextjs-style-routes)
-    - [🏆 NextJS Style Routes Contribution](#-nextjs-style-routes-contribution)
-  - [💡Example: Contentful Blog](#example-contentful-blog)
-    - [💻 Demo the Contentful Blog](#-demo-the-contentful-blog)
-    - [🏆 Contentful Blog Contribution](#-contentful-blog-contribution)
-  - [💡Example: Venia Critical CSS](#example-venia-critical-css)
-    - [💻 Demo Venia Critical CSS](#-demo-venia-critical-css)
-    - [📝 Venia Critical CSS Notes](#-venia-critical-css-notes)
-    - [🏆 Venia Critical CSS Contribution](#-venia-critical-css-contribution)
-- [Concepts](#concepts)
-  - [Extensions](#extensions)
-  - [Targets](#targets)
-    - [When Targets are used](#when-targets-are-used)
-    - [What Targets do](#what-targets-do)
-      - [⚡️Scenario: Adding a Webpack plugin](#️scenario-adding-a-webpack-plugin)
-        - [apply-plugin.js](#apply-pluginjs)
-        - [package.json (excerpt)](#packagejson-excerpt)
-      - [⚡️Scenario! Declare your own targets](#️scenario-declare-your-own-targets)
-        - [declare-dup-exclude.js](#declare-dup-excludejs)
-        - [package.json (another excerpt)](#packagejson-another-excerpt)
-        - [apply-plugin.js (excerpt)](#apply-pluginjs-excerpt)
-      - [⚡️Scenario: Using your new extension](#️scenario-using-your-new-extension)
-  - [More extension ideas](#more-extension-ideas)
-  - [Future goodies for this repo](#future-goodies-for-this-repo)
+-   [Setup](#setup)
+-   [Walkthrough](#walkthrough)
+    -   [💡Example: Content Security Policy for Venia](#example-content-security-policy-for-venia)
+        -   [💻 Demo Upward CSP](#-demo-upward-csp)
+        -   [📝 Upward CSP Notes](#-upward-csp-notes)
+        -   [🏆 Upward CSP Contribution](#-upward-csp-contribution)
+    -   [💡Example: Venia Color Scheme](#example-venia-color-scheme)
+        -   [💻 Demo Venia Color Scheme](#-demo-venia-color-scheme)
+        -   [How to Set Dark Mode](#how-to-set-dark-mode)
+        -   [📝 Venia Color Scheme Notes](#-venia-color-scheme-notes)
+        -   [🏆 Venia Color Scheme Contribution](#-venia-color-scheme-contribution)
+    -   [💡Example: NextJS-Style Routes](#example-nextjs-style-routes)
+        -   [💻 Demo NextJS Style Routes](#-demo-nextjs-style-routes)
+        -   [🏆 NextJS Style Routes Contribution](#-nextjs-style-routes-contribution)
+    -   [💡Example: Contentful Blog](#example-contentful-blog)
+        -   [💻 Demo the Contentful Blog](#-demo-the-contentful-blog)
+        -   [🏆 Contentful Blog Contribution](#-contentful-blog-contribution)
+    -   [💡Example: Venia Critical CSS](#example-venia-critical-css)
+        -   [💻 Demo Venia Critical CSS](#-demo-venia-critical-css)
+        -   [📝 Venia Critical CSS Notes](#-venia-critical-css-notes)
+        -   [🏆 Venia Critical CSS Contribution](#-venia-critical-css-contribution)
+-   [Concepts](#concepts)
+    -   [Extensions](#extensions)
+    -   [Targets](#targets)
+        -   [When Targets are used](#when-targets-are-used)
+        -   [What Targets do](#what-targets-do)
+            -   [⚡️Scenario: Adding a Webpack plugin](#️scenario-adding-a-webpack-plugin)
+                -   [apply-plugin.js](#apply-pluginjs)
+                -   [package.json (excerpt)](#packagejson-excerpt)
+            -   [⚡️Scenario! Declare your own targets](#️scenario-declare-your-own-targets)
+                -   [declare-dup-exclude.js](#declare-dup-excludejs)
+                -   [package.json (another excerpt)](#packagejson-another-excerpt)
+                -   [apply-plugin.js (excerpt)](#apply-pluginjs-excerpt)
+            -   [⚡️Scenario: Using your new extension](#️scenario-using-your-new-extension)
+    -   [More extension ideas](#more-extension-ideas)
+    -   [Future goodies for this repo](#future-goodies-for-this-repo)
 
 # Setup
 
@@ -514,6 +514,11 @@ There's more to learn: you can use sync or async Targets, add special behavior t
     -   Custom renderers for payment methods
     -   Shipping estimators and tax estimators
     -   Store locators
+-   Adapters for useful add-on libraries
+    -   A [Quicklink](https://getquick.link/) extension that would auto-integrate Quicklink's viewport-aware prefetching
+        -   Inject the `window.onload` handler to register the IntersectionObserver _(use HtmlWebpackPlugin targets)_
+        -   Wrap registered routes with the `withQuicklink` React HOC _(expose a new target in Venia's BabelRouteInjectionPlugin)_
+        -   Expose and use additional properties in registered routes _(same as above)_
 
 ## Future goodies for this repo
 
