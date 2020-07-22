@@ -247,7 +247,7 @@ It demonstrates a few potentially common uses of the Targets framework:
 
     ```sh
     CONTENTFUL_GRAPHQL_ENDPOINT=http://localhost:8080/___graphql \
-    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-venia-color-scheme \
+    BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-contentful-blog \
     yarn watch:venia
     ```
 
