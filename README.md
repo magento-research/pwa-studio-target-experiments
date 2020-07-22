@@ -237,7 +237,7 @@ It demonstrates a few potentially common uses of the Targets framework:
 
 1. Clone the [starter-gatsby-blog](https://github.com/contentful/starter-gatsby-blog) project into a sibling directory alongside your PWA Studio folder and this repository.
 
-1. Follow the instructions for setting up that site. Run the local development environment. When it is running locally, you can visit the localhost server to see what the content should look like. Make a note of the GraphQL endpoint logged in the terminal; it will be something like `http://localhost:8080/___graphql`.
+1. Follow the instructions for setting up that repository. Run the local development environment. When it is running locally, you can visit the localhost server to see what the content should look like. Make a note of the GraphQL endpoint logged in the terminal; it will be something like `http://localhost:8080/___graphql`.
 
 1. ⚠️ Have the [companion PWA Studio pull request][pr_content-targets] checked out in your `/path/to/pwa` directory. **This will not work on the develop branch of PWA Studio.**
 
@@ -250,6 +250,8 @@ It demonstrates a few potentially common uses of the Targets framework:
     BUILDBUS_DEPS_ADDITIONAL=@magento-research/pwa-contentful-blog \
     yarn watch:venia
     ```
+    
+    _⚠️ Your `starter-gatsby-blog` may be running at a different URL than this example. Set `CONTENTFUL_GRAPHQL_ENDPOINT` to the GraphQL endpoint your local Gatsby server exposed._
 
 1. View site in browser.
 
