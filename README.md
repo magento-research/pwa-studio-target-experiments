@@ -521,6 +521,19 @@ There's more to learn: you can use sync or async Targets, add special behavior t
         -   Inject the `window.onload` handler to register the IntersectionObserver _(use HtmlWebpackPlugin targets)_
         -   Wrap registered routes with the `withQuicklink` React HOC _(expose a new target in Venia's BabelRouteInjectionPlugin)_
         -   Expose and use additional properties in registered routes _(same as above)_
+-   Data integration
+    -   Targets for modifying GraphQL queries
+        -   Adding Fragments (via a new transformRequest type?)
+        -   High-level rules to observe documents as they pass (mergeable visitors?)
+    -   Validating prop contracts for React components
+        -   Autogenerating prop types from GraphQL queries?
+-   More builtin request transformers
+    -   GraphQL transform type
+        -   Fragment insertion
+        -   Validation
+        -   Linting
+    -   Module replacer
+        -   Convenience functions for a module to register an allowed list of modules to be overridden, e.g. `require('@magento/pwa-target-utils').publishOwnComponents(targets, { 'src/components/Main': { name: 'mainComponent', canReplace: true } })` would automate the declare-intercept boilerplate to do that
 
 ## Future goodies for this repo
 
