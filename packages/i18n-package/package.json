@@ -1,0 +1,20 @@
+{
+    "name": "@magento-research/i18n-package",
+    "version": "0.0.1",
+    "description": "Provide translations for PWA Studio",
+    "publishConfig": {
+      "access": "public"
+    },
+    "license": "(OSL-3.0 OR AFL-3.0)",
+    "main": "./i18n-intercept.js",
+    "repository": "github:magento-research/pwa-studio-target-experiments",
+    "peerDependencies": {
+      "@magento/pwa-buildpack": "^5.1.1",
+      "@magento/venia-ui": "^3.0.0"
+    },
+    "pwa-studio": {
+      "targets": {
+        "intercept": "./i18n-intercept"
+    }
+  }
+}
