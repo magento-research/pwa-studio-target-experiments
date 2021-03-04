@@ -1,9 +1,7 @@
 # PWA Studio Target Experiments <!-- omit in toc -->
 
-This repository is a collection of experimental PWA Studio extensions. Use it to learn about how such extensions are built and used.
+This repository is a collection of experimental PWA Studio extensions. It is not actively maintained. There may be better, more recently updated examples in the [PWA Studio repo extensions directory](https://github.com/magento/pwa-studio/tree/develop/packages/extensions).
 
--   If you want to make PWA Studio extensions, this project is for you.
--   If you want to build stores with PWA Studio and use extensions, this project is for you.
 -   If you want to open an issue about PWA Studio extensions, go to the [PWA Studio repository issues page](https://github.com/magento/pwa-studio).
 -   If you have general questions or comments about Magento PWAs, visit us at the [community Slack channel](http://slack.pwastudio.io) or go to the [Developer Documentation site](https://pwastudio.io).
 -   If you want to do something else, then I don't know why you're here, but you could go look at [people dancing to Steely Dan](https://twitter.com/steelydance), or go play the legendary 1993 video game [Star Control 2](http://sc2.sourceforge.net/).
