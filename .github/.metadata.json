@@ -1,0 +1,30 @@
+{
+    "templateVersion": "0.1",
+    "product": {
+        "name": "PWA Studio Target Experiments",
+        "description": "A collection of experimental PWA Studio extensions."
+    },
+    "contacts": {
+        "team": {
+            "name": "The Untitled Geese",
+            "DL": "Grp-Untitled-Geese",
+            "slackChannel": "pwa"
+        }
+    },
+    "ticketTracker": {
+        "functionalJiraQueue": {
+            "projectKey": "PWA",
+            "component": ""
+        },
+        "securityJiraQueue": {
+            "projectKey": "MAGREQ",
+            "component": "PWA"
+        }
+    },
+    "staticScan": {
+        "enable": false,
+        "frequency": "quarterly",
+        "customName": "PWA Studio Target Experiments Static Scan",
+        "branchesToScan": ["master"]
+    }
+}
